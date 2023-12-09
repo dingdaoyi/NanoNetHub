@@ -1,7 +1,7 @@
 
 ```shell
-sqlx migrate add init_sql
+sqlx database create
+sqlx database drop
 
-sqlx migrate run
-
+ sqlx migrate run 
 ```
