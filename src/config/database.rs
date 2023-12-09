@@ -37,9 +37,8 @@ pub enum DataSourceType {
 impl DataSourceType {
     pub async fn init_pool(&self) -> Result<(), ServerError> {
         match self {
-            DataSourceType::_MYSQL => todo!(),
-            DataSourceType::_POSTGRESQL => todo!(),
             DataSourceType::Sqlite => init_sqlite_pool().await,
+            _ => {}
         }
     }
 }
