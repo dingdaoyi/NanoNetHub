@@ -1,5 +1,5 @@
 [package]
-name = "NanoNetHub"
+name = "nano_net_hub"
 version = "0.1.0"
 edition = "2021"
 

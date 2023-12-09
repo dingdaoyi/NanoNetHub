@@ -2,6 +2,7 @@
 #[derive(sqlx::FromRow, Debug)]
 pub struct Service {
     pub service_id: i32,
+    pub product_id: i32,
     pub identifier: String,
     pub service_name: String,
     pub service_type: String,

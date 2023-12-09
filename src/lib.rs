@@ -1,5 +1,5 @@
 use std::env;
-use std::fmt::Debug;
+
 use sqlx::{Pool, Sqlite};
 use crate::config::database::DataSourceType;
 use crate::models::ServerError;

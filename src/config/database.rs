@@ -29,16 +29,16 @@ pub fn get_conn() -> SqlPool {
 }
 
 pub enum DataSourceType {
-    MYSQL,
-    POSTGRESQL,
+    _MYSQL,
+    _POSTGRESQL,
     Sqlite,
 }
 
 impl DataSourceType {
     pub async fn init_pool(&self) -> Result<(), ServerError> {
         match self {
-            DataSourceType::MYSQL => todo!(),
-            DataSourceType::POSTGRESQL => todo!(),
+            DataSourceType::_MYSQL => todo!(),
+            DataSourceType::_POSTGRESQL => todo!(),
             DataSourceType::Sqlite => init_sqlite_pool().await,
         }
     }

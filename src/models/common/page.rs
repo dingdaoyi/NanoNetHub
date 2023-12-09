@@ -1,4 +1,3 @@
-use std::fmt::Display;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize)]
@@ -36,10 +35,4 @@ impl<T> PaginationResponse<T> {
     pub fn new(data: Vec<T>, total: u32) -> Self {
         Self { total, data }
     }
-}
-
-enum SqlCondition<T>
-    where T: ToString, {
-    Equal(String, T),
-    Like(String, T),
 }
