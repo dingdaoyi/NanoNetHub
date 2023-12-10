@@ -38,7 +38,9 @@ impl DataSourceType {
     pub async fn init_pool(&self) -> Result<(), ServerError> {
         match self {
             DataSourceType::Sqlite => init_sqlite_pool().await,
-            _ => {}
+            _ => {
+                Ok(())
+            }
         }
     }
 }

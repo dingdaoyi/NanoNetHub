@@ -3,10 +3,11 @@ use axum::routing::get;
 use crate::models::ServerError;
 use crate::server::handler::base::Controller;
 use crate::server::handler::product_handler::ProductHandler;
+use crate::server::handler::user_handler::UserHandler;
 
 pub fn server_router() -> Router {
     Router::new()
-        .nest("/", routers())
+        .nest("/api", routers())
 }
 
 //api
@@ -29,4 +30,5 @@ pub fn server_router() -> Router {
     Router::new()
         .route("/health",get(health))
         .merge(ProductHandler::default().router())
+        .merge(UserHandler::default().router())
 }
