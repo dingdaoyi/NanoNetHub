@@ -1,6 +1,7 @@
 use std::env;
 
 use sqlx::{Pool, Sqlite};
+use sqlx::sqlite::SqliteRow;
 use crate::config::database::DataSourceType;
 use crate::models::ServerError;
 use crate::server::{Server, ServerConfig};
@@ -11,6 +12,7 @@ mod server;
 
 // config sqlite db
 pub type SqlPool = Pool<Sqlite>;
+pub type SqlRow = SqliteRow;
 
 pub async fn run_server() -> Result<(), ServerError> {
     DataSourceType::Sqlite.init_pool().await?;

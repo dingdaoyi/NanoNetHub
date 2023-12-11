@@ -1,9 +1,11 @@
 use axum::{Json, Router};
-use axum::routing::post;
+use axum::extract::Path;
+use axum::routing::{delete, post};
 use chrono::Utc;
 use sqlx::{Acquire, Executor};
 use crate::config::database::get_conn;
 use crate::models::{PaginationResponse, Product, R, ServerError};
+use crate::models::common::sqlx_page::{Condition, PageSqlBuilder};
 use crate::models::tls::product::{CreateProduct, ProductQuery, UpdateProduct};
 use crate::server::handler::base::Controller;
 
@@ -16,6 +18,7 @@ impl Controller for ProductHandler {
             .route("/product", post(Self::create_product)
                 .put(Self::update))
             .route("/product/page", post(Self::page))
+            .route("/product/:id", delete(Self::delete))
     }
 }
 
@@ -45,36 +48,19 @@ impl ProductHandler {
     async fn page(
         Json(ProductQuery { product_name, base_query }): Json<ProductQuery>,
     ) -> Result<Json<R<PaginationResponse<Product>>>, ServerError> {
-        let mut sql = String::from("SELECT * FROM tb_product");
-        let mut count_sql = String::from("SELECT count(*) FROM tb_product");
+        let mut builder = PageSqlBuilder::builder("tb_product", &base_query)
+            .where_query("deleted=false");
         if let Some(product_name) = product_name {
             // 怎么判断防注入
-            sql = format!("{} where product_name like %{}", sql, product_name);
-            count_sql = format!("{} where product_name like %{}", count_sql, product_name);
+            builder = builder.conditions(vec![Condition::Like("product_name", product_name.into())]);
         }
-        let pool = get_conn();
-        sql = format!("{} LIMIT ? OFFSET ?", sql);
-        let count_query =
-            sqlx::query_scalar::<_, u32>(&count_sql)
-                .fetch_one(&pool)
-                .await?;
-
-        match count_query {
-            0 => {
-                Ok(Json(R::success_with_data(PaginationResponse::new(vec![], 0))))
-            }
-            total => {
-                let products = sqlx::query_as::<_, Product>(&sql)
-                    .bind(base_query.limit())
-                    .bind(base_query.offset())
-                    .fetch_all(&pool)
-                    .await?;
-                Ok(Json(R::success_with_data(PaginationResponse::new(products, total))))
-            }
-        }
+        builder.build().execute()
+            .await
+            .map(|value|
+                Json(R::success_with_data(value)))
     }
 
-    // 分页查询
+    // 修改
     async fn update(
         Json(product): Json<UpdateProduct>,
     ) -> Result<Json<R<String>>, ServerError> {
@@ -96,6 +82,29 @@ impl ProductHandler {
             }
             false => {
                 Ok(Json(R::fail("插入失败".into())))
+            }
+        }
+    }
+
+    // 逻辑删除
+    async fn delete(
+        Path(id): Path<i32>,
+    ) -> Result<Json<R<String>>, ServerError> {
+        let rows_affected = sqlx::query!(
+           r#"
+           update tb_product set deleted=true
+            where id=?
+           "#,
+          id
+       ).execute(&get_conn())
+            .await?
+            .rows_affected();
+        match rows_affected > 0 {
+            true => {
+                Ok(Json(R::success()))
+            }
+            false => {
+                Ok(Json(R::fail("删除失败".into())))
             }
         }
     }
