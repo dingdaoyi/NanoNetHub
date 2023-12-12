@@ -1,7 +1,7 @@
 import './App.css'
 import HubLayout from "./components/HubLayout.tsx";
 import {Route, Routes} from "react-router-dom";
-import Product from "./pages/Product.tsx";
+import Product from "./pages/product/Product.tsx";
 import ProductTsl from "./pages/ProductTsl.tsx";
 
 function App() {

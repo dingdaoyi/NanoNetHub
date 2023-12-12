@@ -47,12 +47,12 @@ impl PaginationRequest {
         self.size
     }
     pub fn offset(&self) -> u32 {
-        self.page * self.size
+        (self.page - 1) * self.size
     }
 }
 
 fn default_page() -> u32 {
-    0
+    1
 }
 
 fn default_sort_fields() -> Vec<String> {

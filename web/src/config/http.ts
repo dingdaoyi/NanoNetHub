@@ -9,7 +9,7 @@ axios.defaults.baseURL = "/api";
 interface R<T> {
     code: number,
     success: boolean,
-    msg?: String,
+    msg?: string,
     data?: T,
 }
 
@@ -20,7 +20,7 @@ interface R<T> {
 axios.interceptors.response.use(
     (response) => {
         if (response.data?.success === false) {
-            console.log("响应失败:",response.data);
+            console.log("响应失败:", response.data);
         }
         return response.data;
     },
@@ -34,7 +34,7 @@ axios.interceptors.response.use(
  * @param params  请求参数
  * @returns {Promise}
  */
-export function get<T>(url: string, params :object): Promise<T> {
+export function get<T>(url: string, params: object): Promise<T> {
     return new Promise((resolve, reject) => {
         axios.get(url, {
             params: params,
@@ -53,7 +53,7 @@ export function get<T>(url: string, params :object): Promise<T> {
  * @returns {Promise}
  */
 
-export function post<T>(url: string, data: any) : Promise<T> {
+export function post<T>(url: string, data: object): Promise<T> {
     return new Promise((resolve, reject) => {
         axios.post(url, data).then(
             (response) => {
@@ -71,7 +71,7 @@ export function post<T>(url: string, data: any) : Promise<T> {
  * @param data
  * @returns {Promise}
  */
-export function put<T>(url: string, data: object) : Promise<T> {
+export function put<T>(url: string, data: object): Promise<T> {
     return new Promise((resolve, reject) => {
         axios.put(url, data).then(
             (response) => {
@@ -86,7 +86,7 @@ export function put<T>(url: string, data: object) : Promise<T> {
 }
 
 //失败提示
-function msag(err: { response: { status: any; data: R<any>; }; }) {
+function msag(err: { response: { status: number; data: R<object>; }; }) {
     if (err && err.response) {
         switch (err.response.status) {
             case 400:
