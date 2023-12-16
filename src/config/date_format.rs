@@ -1,11 +1,12 @@
 use chrono::{DateTime, NaiveDateTime, TimeZone, Utc};
 use serde::{self, Deserialize, Deserializer, Serializer};
+use serde_json::Value;
 
 const DATE_FORMAT: &str = "%Y-%m-%d %H:%M:%S";
 
 pub fn serialize<S>(date: &Option<NaiveDateTime>, serializer: S) -> Result<S::Ok, S::Error>
-where
-    S: Serializer,
+    where
+        S: Serializer,
 {
     if let Some(date) = date {
         let datetime: DateTime<Utc> = Utc.from_utc_datetime(date);
@@ -17,8 +18,8 @@ where
 }
 
 pub fn _deserialize<'de, D>(deserializer: D) -> Result<Option<NaiveDateTime>, D::Error>
-where
-    D: Deserializer<'de>,
+    where
+        D: Deserializer<'de>,
 {
     let value = Option::<String>::deserialize(deserializer)?;
 

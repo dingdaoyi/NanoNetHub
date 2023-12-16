@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
 use crate::config::date_format;
+use crate::config::option_serialize::deserialize_option_string;
 use crate::models::common::page::PaginationRequest;
 
 /// 产品
@@ -34,5 +35,6 @@ pub struct UpdateProduct {
 #[derive(Debug, Deserialize)]
 pub struct ProductQuery {
     pub base_query: PaginationRequest,
+    #[serde(deserialize_with = "deserialize_option_string")]
     pub product_name: Option<String>,
 }

@@ -52,6 +52,20 @@ function Product() {
     const [pageParams, setPageParams] = useState({page: 1, size: 10, total: 0});
     const [loading, setLoading] = useState(false);
 
+    // 在组件挂载或搜索参数、分页参数改变时触发请求
+    const fetchData = async () => {
+        try {
+            const data = await productPage({
+                base_query: pageParams,
+                product_name,
+            });
+            setListData(data.data);
+        } catch (error) {
+            // 处理请求错误
+            console.error(error)
+        }
+    };
+
     const handleSearch = () => {
         setPageParams({...pageParams, page: 1});
     };
@@ -60,23 +74,9 @@ function Product() {
     };
 
     useEffect(() => {
-        // 在组件挂载或搜索参数、分页参数改变时触发请求
-        const fetchData = async () => {
-            try {
-                const data = await productPage({
-                    base_query: pageParams,
-                });
-                setListData(data.data);
-            } catch (error) {
-                // 处理请求错误
-                console.error(error)
-            }
-        };
         setLoading(true);
-        fetchData();
-        setLoading(false);
-
-    }, [product_name, pageParams]);
+        fetchData().then(() => setLoading(false));
+    }, [pageParams]);
     return (
         <>
             <Space align="center" style={{marginBottom: 16}}>

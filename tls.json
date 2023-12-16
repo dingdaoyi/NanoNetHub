@@ -1,0 +1,867 @@
+{
+  "productInfo": {
+    "productId": 17009451
+  },
+  "properties": [
+    {
+      "propertyId": 1,
+      "identifier": "protocol_version",
+      "propertyName": "协议版本号",
+      "description": "",
+      "dataType": "vary-string",
+      "dataSchema": "\"len\":0,\"unit\":\"null\",\"unitName\":\"\""
+    },
+    {
+      "propertyId": 2,
+      "identifier": "latitude",
+      "propertyName": "纬度",
+      "description": "",
+      "dataType": "float",
+      "dataSchema": "\"len\":4,\"unit\":\"°\",\"min\":\"-90\",\"max\":\"90\",\"unitName\":\"度\""
+    },
+    {
+      "propertyId": 3,
+      "identifier": "longitude",
+      "propertyName": "经度",
+      "description": "",
+      "dataType": "float",
+      "dataSchema": "\"len\":4,\"unit\":\"°\",\"min\":\"-180\",\"max\":\"180\",\"unitName\":\"度\""
+    },
+    {
+      "propertyId": 4,
+      "identifier": "steal_detect_enable",
+      "propertyName": "偷盗使能开关",
+      "description": "",
+      "dataType": "enum",
+      "dataSchema": "\"len\":1,\"enumDetail\":{\"0\":\"关\",\"1\":\"开\"}"
+    },
+    {
+      "propertyId": 5,
+      "identifier": "crash_sensitivity",
+      "propertyName": "碰撞灵敏度",
+      "description": "",
+      "dataType": "enum",
+      "dataSchema": "\"len\":1,\"enumDetail\":{\"1\":\"高\",\"2\":\"中\",\"3\":\"低\"}"
+    },
+    {
+      "propertyId": 6,
+      "identifier": "incline_sensitivity",
+      "propertyName": "倾斜灵敏度",
+      "description": "",
+      "dataType": "enum",
+      "dataSchema": "\"len\":1,\"enumDetail\":{\"1\":\"高\",\"2\":\"中\",\"3\":\"低\"}"
+    },
+    {
+      "propertyId": 7,
+      "identifier": "heartbeat_period",
+      "propertyName": "心跳周期",
+      "description": "",
+      "dataType": "integer",
+      "dataSchema": "\"len\":2,\"unit\":\"min\",\"min\":\"6\",\"max\":\"4320\",\"unitName\":\"分钟\""
+    },
+    {
+      "propertyId": 8,
+      "identifier": "sampling_period",
+      "propertyName": "采样周期",
+      "description": "",
+      "dataType": "integer",
+      "dataSchema": "\"len\":2,\"unit\":\"min\",\"min\":\"1\",\"max\":\"60\",\"unitName\":\"分钟\""
+    },
+    {
+      "propertyId": 9,
+      "identifier": "fault_type",
+      "propertyName": "故障种类",
+      "description": "",
+      "dataType": "enum",
+      "dataSchema": "\"len\":1,\"enumDetail\":{\"0\":\"传感器故障\",\"1\":\"传感器故障恢复\",\"2\":\"蓝牙故障\",\"3\":\"蓝牙故障恢复\"}"
+    },
+    {
+      "propertyId": 10,
+      "identifier": "hydraulic_threshold_dynamic",
+      "propertyName": "水压波动阈值",
+      "description": "",
+      "dataType": "integer",
+      "dataSchema": "\"len\":4,\"unit\":\"kPa\",\"min\":\"0\",\"max\":\"2500\",\"unitName\":\"千帕\""
+    },
+    {
+      "propertyId": 11,
+      "identifier": "ecl",
+      "propertyName": "无线信号覆盖等级",
+      "description": null,
+      "dataType": "integer",
+      "dataSchema": "\"unit\":\"null\",\"min\":\"-32768\",\"len\":4,\"unitName\":\"\",\"max\":\"32767\""
+    },
+    {
+      "propertyId": 12,
+      "identifier": "pci",
+      "propertyName": "物理小区标识",
+      "description": null,
+      "dataType": "integer",
+      "dataSchema": "\"unit\":\"null\",\"min\":\"-32768\",\"len\":4,\"unitName\":\"\",\"max\":\"32767\""
+    },
+    {
+      "propertyId": 13,
+      "identifier": "IMEI",
+      "propertyName": "IMEI",
+      "description": null,
+      "dataType": "vary-string",
+      "dataSchema": "\"len\":0,\"unit\":\"null\",\"unitName\":\"\""
+    },
+    {
+      "propertyId": 14,
+      "identifier": "rsrp",
+      "propertyName": "参考信号接收功率",
+      "description": null,
+      "dataType": "integer",
+      "dataSchema": "\"unit\":\"null\",\"min\":\"-32768\",\"len\":4,\"unitName\":\"\",\"max\":\"32767\""
+    },
+    {
+      "propertyId": 15,
+      "identifier": "sinr",
+      "propertyName": "信号与干扰加噪声比",
+      "description": null,
+      "dataType": "integer",
+      "dataSchema": "\"unit\":\"null\",\"min\":\"-32768\",\"len\":4,\"unitName\":\"\",\"max\":\"32767\""
+    },
+    {
+      "propertyId": 16,
+      "identifier": "ICCID",
+      "propertyName": "ICCID",
+      "description": null,
+      "dataType": "vary-string",
+      "dataSchema": "\"len\":0,\"unit\":\"null\",\"unitName\":\"\""
+    },
+    {
+      "propertyId": 17,
+      "identifier": "cell_id",
+      "propertyName": "小区位置信息",
+      "description": null,
+      "dataType": "integer",
+      "dataSchema": "\"unit\":\"null\",\"min\":\"-2147483648\",\"len\":4,\"unitName\":\"\",\"max\":\"2147483647\""
+    },
+    {
+      "propertyId": 18,
+      "identifier": "act_result",
+      "propertyName": "动作指令代码执行结果",
+      "description": null,
+      "dataType": "enum",
+      "dataSchema": "\"len\":1,\"enumDetail\":{\"0\":\"执行成功\",\"1\":\"执行失败\"}"
+    },
+    {
+      "propertyId": 19,
+      "identifier": "alarm_type",
+      "propertyName": "报警种类",
+      "description": null,
+      "dataType": "enum",
+      "dataSchema": "\"len\":1,\"enumDetail\":{\"0\":\"波动报警\",\"1\":\"波动报警解除\",\"2\":\"倾斜报警\",\"3\":\"倾斜报警解除\",\"4\":\"碰撞报警\",\"5\":\"碰撞报警解除\",\"6\":\"偷盗报警\",\"7\":\"偷盗报警解除\"}"
+    },
+    {
+      "propertyId": 20,
+      "identifier": "module_type",
+      "propertyName": "模组型号",
+      "description": null,
+      "dataType": "vary-string",
+      "dataSchema": "\"len\":0,\"unit\":\"null\",\"unitName\":\"\""
+    },
+    {
+      "propertyId": 21,
+      "identifier": "battery_state",
+      "propertyName": "电池状态",
+      "description": null,
+      "dataType": "enum",
+      "dataSchema": "\"len\":1,\"enumDetail\":{\"0\":\"正常\",\"1\":\"低电量\"}"
+    },
+    {
+      "propertyId": 22,
+      "identifier": "battery_value",
+      "propertyName": "电池电量",
+      "description": null,
+      "dataType": "integer",
+      "dataSchema": "\"unit\":\"%\",\"min\":\"0\",\"len\":4,\"unitName\":\"百分比\",\"max\":\"100\""
+    },
+    {
+      "propertyId": 23,
+      "identifier": "terminal_type",
+      "propertyName": "终端型号",
+      "description": null,
+      "dataType": "vary-string",
+      "dataSchema": "\"len\":0,\"unit\":\"null\",\"unitName\":\"\""
+    },
+    {
+      "propertyId": 24,
+      "identifier": "battery_voltage",
+      "propertyName": "电池电压",
+      "description": null,
+      "dataType": "float",
+      "dataSchema": "\"unit\":\"V\",\"min\":\"0\",\"len\":4,\"unitName\":\"伏特\",\"max\":\"5\""
+    },
+    {
+      "propertyId": 25,
+      "identifier": "hydraulic_state",
+      "propertyName": "水压检测状态",
+      "description": null,
+      "dataType": "enum",
+      "dataSchema": "\"len\":1,\"enumDetail\":{\"0\":\"正常\",\"1\":\"压力过高\",\"2\":\"压力过低\"}"
+    },
+    {
+      "propertyId": 26,
+      "identifier": "hydraulic_value",
+      "propertyName": "水压",
+      "description": null,
+      "dataType": "integer",
+      "dataSchema": "\"len\":4,\"unit\":\"kPa\",\"unitName\":\"千帕\",\"min\":\"0\",\"max\":\"2500\""
+    },
+    {
+      "propertyId": 27,
+      "identifier": "hardware_version",
+      "propertyName": "硬件版本",
+      "description": null,
+      "dataType": "vary-string",
+      "dataSchema": "\"len\":0,\"unit\":\"null\",\"unitName\":\"\""
+    },
+    {
+      "propertyId": 28,
+      "identifier": "software_version",
+      "propertyName": "软件版本",
+      "description": null,
+      "dataType": "vary-string",
+      "dataSchema": "\"len\":0,\"unit\":\"null\",\"unitName\":\"\""
+    },
+    {
+      "propertyId": 29,
+      "identifier": "manufacturer_name",
+      "propertyName": "厂家名称",
+      "description": null,
+      "dataType": "vary-string",
+      "dataSchema": "\"len\":0,\"unit\":\"null\",\"unitName\":\"\""
+    },
+    {
+      "propertyId": 30,
+      "identifier": "hydraulic_threshold_max",
+      "propertyName": "水压阈值上限",
+      "description": null,
+      "dataType": "integer",
+      "dataSchema": "\"len\":4,\"unit\":\"kPa\",\"unitName\":\"千帕\",\"min\":\"0\",\"max\":\"2500\""
+    },
+    {
+      "propertyId": 31,
+      "identifier": "hydraulic_threshold_min",
+      "propertyName": "水压阈值下限",
+      "description": null,
+      "dataType": "integer",
+      "dataSchema": "\"len\":4,\"unit\":\"kPa\",\"unitName\":\"千帕\",\"min\":\"0\",\"max\":\"2500\""
+    }
+  ],
+  "services": [
+    {
+      "serviceId": 8010,
+      "identifier": "get_configuration",
+      "serviceName": "获取配置",
+      "serviceType": "Command",
+      "description": "",
+      "properties": [],
+      "parameters": [
+        {
+          "parameterId": 2,
+          "identifier": "configuration",
+          "parameterName": "配置参数",
+          "description": "",
+          "dataType": "integer",
+          "dataSchema": "\"min\":\"-128\",\"max\":\"127\",\"len\":1,\"unit\":\"null\",\"unitName\":\"\"",
+          "serial": 1
+        }
+      ]
+    },
+    {
+      "serviceId": 8009,
+      "identifier": "set_steal_alarm_recover",
+      "serviceName": "偷盗复位下发",
+      "serviceType": "Command",
+      "description": "",
+      "properties": [],
+      "parameters": [
+        {
+          "parameterId": 1,
+          "identifier": "alarm_type",
+          "parameterName": "报警种类",
+          "description": "",
+          "dataType": "enum",
+          "dataSchema": "\"len\":1,\"enumDetail\":{\"7\":\"偷盗报警解除\"}",
+          "serial": 1
+        }
+      ]
+    },
+    {
+      "serviceId": 9009,
+      "identifier": "set_steal_alarm_recover_resp",
+      "serviceName": "偷盗复位下发响应",
+      "serviceType": "CommandResponse",
+      "description": "",
+      "properties": [
+        {
+          "propertyId": 19,
+          "serial": 1
+        },
+        {
+          "propertyId": 18,
+          "serial": 2
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 1001,
+      "identifier": "alarm_type_report",
+      "serviceName": "消防栓报警",
+      "serviceType": "EventReport",
+      "description": null,
+      "properties": [
+        {
+          "propertyId": 19,
+          "serial": 1
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 8007,
+      "identifier": "set_crash_sensitivity",
+      "serviceName": "碰撞灵敏度下发",
+      "serviceType": "Command",
+      "description": "",
+      "properties": [
+        {
+          "propertyId": 5,
+          "serial": 1
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 9004,
+      "identifier": "set_sampling_period_resp",
+      "serviceName": "采样周期下发响应",
+      "serviceType": "CommandResponse",
+      "description": "",
+      "properties": [
+        {
+          "propertyId": 8,
+          "serial": 1
+        },
+        {
+          "propertyId": 18,
+          "serial": 2
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 1006,
+      "identifier": "gps_report",
+      "serviceName": "GPS数据上报",
+      "serviceType": "EventReport",
+      "description": "",
+      "properties": [
+        {
+          "propertyId": 3,
+          "serial": 1
+        },
+        {
+          "propertyId": 2,
+          "serial": 2
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 8003,
+      "identifier": "set_hydraulic_threshold",
+      "serviceName": "水压阈值下发",
+      "serviceType": "Command",
+      "description": "",
+      "properties": [
+        {
+          "propertyId": 30,
+          "serial": 1
+        },
+        {
+          "propertyId": 31,
+          "serial": 2
+        },
+        {
+          "propertyId": 10,
+          "serial": 3
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 9001,
+      "identifier": "set_hydraulic_threshold_min_resp",
+      "serviceName": "水压阈值下限响应",
+      "serviceType": "CommandResponse",
+      "description": null,
+      "properties": [
+        {
+          "propertyId": 31,
+          "serial": 1
+        },
+        {
+          "propertyId": 18,
+          "serial": 2
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 8008,
+      "identifier": "set_steal_detect_enable",
+      "serviceName": "偷盗检测使能下发",
+      "serviceType": "Command",
+      "description": "",
+      "properties": [
+        {
+          "propertyId": 4,
+          "serial": 1
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 4,
+      "identifier": "battery_report",
+      "serviceName": "设备电量信息上报",
+      "serviceType": "DataReport",
+      "description": "",
+      "properties": [
+        {
+          "propertyId": 24,
+          "serial": 1
+        },
+        {
+          "propertyId": 22,
+          "serial": 2
+        },
+        {
+          "propertyId": 21,
+          "serial": 3
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 8001,
+      "identifier": "set_hydraulic_threshold_min",
+      "serviceName": "水压阈值下限下发",
+      "serviceType": "Command",
+      "description": null,
+      "properties": [
+        {
+          "propertyId": 31,
+          "serial": 1
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 8005,
+      "identifier": "set_heartbeat_period",
+      "serviceName": "心跳周期下发",
+      "serviceType": "Command",
+      "description": "",
+      "properties": [
+        {
+          "propertyId": 7,
+          "serial": 1
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 8006,
+      "identifier": "set_incline_sensitivity",
+      "serviceName": "倾斜灵敏度下发",
+      "serviceType": "Command",
+      "description": "",
+      "properties": [
+        {
+          "propertyId": 6,
+          "serial": 1
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 1005,
+      "identifier": "fault_state_report",
+      "serviceName": "故障上报",
+      "serviceType": "EventReport",
+      "description": "",
+      "properties": [
+        {
+          "propertyId": 9,
+          "serial": 1
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 9007,
+      "identifier": "set_crash_sensitivity_resp",
+      "serviceName": "碰撞灵敏度下发响应",
+      "serviceType": "CommandResponse",
+      "description": "",
+      "properties": [
+        {
+          "propertyId": 5,
+          "serial": 1
+        },
+        {
+          "propertyId": 18,
+          "serial": 2
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 9003,
+      "identifier": "set_hydraulic_threshold_resp",
+      "serviceName": "水压阈值下发响应",
+      "serviceType": "CommandResponse",
+      "description": "",
+      "properties": [
+        {
+          "propertyId": 30,
+          "serial": 1
+        },
+        {
+          "propertyId": 31,
+          "serial": 2
+        },
+        {
+          "propertyId": 10,
+          "serial": 3
+        },
+        {
+          "propertyId": 18,
+          "serial": 4
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 8004,
+      "identifier": "set_sampling_period",
+      "serviceName": "采样周期下发",
+      "serviceType": "Command",
+      "description": "",
+      "properties": [
+        {
+          "propertyId": 8,
+          "serial": 1
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 5,
+      "identifier": "configuration_report",
+      "serviceName": "设备配置参数上报",
+      "serviceType": "DataReport",
+      "description": "",
+      "properties": [
+        {
+          "propertyId": 30,
+          "serial": 1
+        },
+        {
+          "propertyId": 31,
+          "serial": 2
+        },
+        {
+          "propertyId": 10,
+          "serial": 3
+        },
+        {
+          "propertyId": 8,
+          "serial": 4
+        },
+        {
+          "propertyId": 7,
+          "serial": 5
+        },
+        {
+          "propertyId": 6,
+          "serial": 6
+        },
+        {
+          "propertyId": 5,
+          "serial": 7
+        },
+        {
+          "propertyId": 4,
+          "serial": 8
+        },
+        {
+          "propertyId": 1,
+          "serial": 9
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 9008,
+      "identifier": "set_steal_detect_enable_resp",
+      "serviceName": "偷盗检测使能下发响应",
+      "serviceType": "CommandResponse",
+      "description": "",
+      "properties": [
+        {
+          "propertyId": 4,
+          "serial": 1
+        },
+        {
+          "propertyId": 18,
+          "serial": 2
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 9010,
+      "identifier": "get_configuration_resp",
+      "serviceName": "获取配置响应",
+      "serviceType": "CommandResponse",
+      "description": "",
+      "properties": [
+        {
+          "propertyId": 30,
+          "serial": 1
+        },
+        {
+          "propertyId": 31,
+          "serial": 2
+        },
+        {
+          "propertyId": 10,
+          "serial": 3
+        },
+        {
+          "propertyId": 8,
+          "serial": 4
+        },
+        {
+          "propertyId": 7,
+          "serial": 5
+        },
+        {
+          "propertyId": 6,
+          "serial": 6
+        },
+        {
+          "propertyId": 5,
+          "serial": 7
+        },
+        {
+          "propertyId": 4,
+          "serial": 8
+        },
+        {
+          "propertyId": 1,
+          "serial": 9
+        },
+        {
+          "propertyId": 18,
+          "serial": 10
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 9005,
+      "identifier": "set_heartbeat_period_resp",
+      "serviceName": "心跳周期下发响应",
+      "serviceType": "CommandResponse",
+      "description": "",
+      "properties": [
+        {
+          "propertyId": 7,
+          "serial": 1
+        },
+        {
+          "propertyId": 18,
+          "serial": 2
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 9006,
+      "identifier": "set_incline_sensitivity_resp",
+      "serviceName": "倾斜灵敏度下发响应",
+      "serviceType": "CommandResponse",
+      "description": "",
+      "properties": [
+        {
+          "propertyId": 6,
+          "serial": 1
+        },
+        {
+          "propertyId": 18,
+          "serial": 2
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 9002,
+      "identifier": "set_hydraulic_threshold_max_resp",
+      "serviceName": "水压阈值上限响应",
+      "serviceType": "CommandResponse",
+      "description": null,
+      "properties": [
+        {
+          "propertyId": 30,
+          "serial": 1
+        },
+        {
+          "propertyId": 18,
+          "serial": 2
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 8002,
+      "identifier": "set_hydraulic_threshold_max",
+      "serviceName": "水压阈值上限下发",
+      "serviceType": "Command",
+      "description": null,
+      "properties": [
+        {
+          "propertyId": 30,
+          "serial": 1
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 1,
+      "identifier": "data_report",
+      "serviceName": "业务数据上报",
+      "serviceType": "DataReport",
+      "description": null,
+      "properties": [
+        {
+          "propertyId": 26,
+          "serial": 1
+        },
+        {
+          "propertyId": 25,
+          "serial": 2
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 1004,
+      "identifier": "battery_voltage_low_alarm",
+      "serviceName": "电池低电压告警",
+      "serviceType": "EventReport",
+      "description": null,
+      "properties": [
+        {
+          "propertyId": 24,
+          "serial": 1
+        },
+        {
+          "propertyId": 21,
+          "serial": 2
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 2,
+      "identifier": "signal_report",
+      "serviceName": "信号数据上报",
+      "serviceType": "DataReport",
+      "description": null,
+      "properties": [
+        {
+          "propertyId": 14,
+          "serial": 1
+        },
+        {
+          "propertyId": 15,
+          "serial": 2
+        },
+        {
+          "propertyId": 12,
+          "serial": 3
+        },
+        {
+          "propertyId": 11,
+          "serial": 4
+        },
+        {
+          "propertyId": 17,
+          "serial": 5
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 1002,
+      "identifier": "hydraulic_state_report",
+      "serviceName": "水压检测状态上报",
+      "serviceType": "EventReport",
+      "description": null,
+      "properties": [
+        {
+          "propertyId": 25,
+          "serial": 1
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 3,
+      "identifier": "info_report",
+      "serviceName": "设备信息上报",
+      "serviceType": "DataReport",
+      "description": null,
+      "properties": [
+        {
+          "propertyId": 29,
+          "serial": 1
+        },
+        {
+          "propertyId": 23,
+          "serial": 2
+        },
+        {
+          "propertyId": 20,
+          "serial": 3
+        },
+        {
+          "propertyId": 27,
+          "serial": 4
+        },
+        {
+          "propertyId": 28,
+          "serial": 5
+        },
+        {
+          "propertyId": 13,
+          "serial": 6
+        },
+        {
+          "propertyId": 16,
+          "serial": 7
+        }
+      ],
+      "parameters": []
+    }
+  ]
+}

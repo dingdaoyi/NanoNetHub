@@ -83,7 +83,6 @@ impl<'a, > PageSqlBuilder<'a> {
         let mut sql = format!("SELECT * FROM {} ", &self.table_name);
         let mut count_sql = format!("SELECT count(*) FROM  {} ", &self.table_name);
         let mut query_params = vec![];
-        let mut param_index = 1;
         match self.where_query {
             None => {
                 let conditions = self.conditions;
@@ -92,8 +91,7 @@ impl<'a, > PageSqlBuilder<'a> {
                     let mut values = vec![];
                     let mut sql_strings = vec![];
                     for condition in conditions {
-                        let (sql, value) = condition.to_sql(param_index);
-                        param_index = param_index + 1;
+                        let (sql, value) = condition.to_sql();
                         sql_strings.push(sql);
                         values.push(value);
                     }
@@ -111,8 +109,7 @@ impl<'a, > PageSqlBuilder<'a> {
                     let mut values = vec![];
                     let mut sql_strings = vec![];
                     for condition in conditions {
-                        let (sql, value) = condition.to_sql(param_index);
-                        param_index = param_index + 1;
+                        let (sql, value) = condition.to_sql();
                         sql_strings.push(sql);
                         values.push(value);
                     }
@@ -130,7 +127,7 @@ impl<'a, > PageSqlBuilder<'a> {
         }
         PageSql {
             count_query: count_sql,
-            query: format!("{} LIMIT ${} OFFSET ${}", sql, param_index, param_index + 1),
+            query: format!("{} LIMIT ? OFFSET ?", sql),
             query_params,
             limit: request.limit(),
             offset: request.offset(),
@@ -191,10 +188,10 @@ pub enum Condition<'a> {
 }
 
 impl<'a> Condition<'a> {
-    fn to_sql(&self, index: i32) -> (String, Value) {
+    fn to_sql(&self) -> (String, Value) {
         match self {
-            Condition::Equal(field, value) => (format!("{} = ${} ", field, index), value.clone()),
-            Condition::Like(field, value) => (format!("{} like ${} ", field, index), Value::STRING(format!("{}", value))),
+            Condition::Equal(field, value) => (format!("{} = ? ", field, ), value.clone()),
+            Condition::Like(field, value) => (format!("{} like '%' || ? || '%' ", field), Value::STRING(format!("{}", value))),
         }
     }
 }
