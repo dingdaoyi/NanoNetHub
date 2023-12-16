@@ -92,8 +92,7 @@ impl ProductHandler {
     ) -> Result<Json<R<String>>, ServerError> {
         let rows_affected = sqlx::query!(
            r#"
-           update tb_product set deleted=true
-            where id=?
+           delete from tb_product where id=?
            "#,
           id
        ).execute(&get_conn())

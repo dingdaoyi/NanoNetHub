@@ -23,7 +23,7 @@ impl PropertyHandler {
         Json(CreateProperty { product_id, identifier, property_name, description, data_schema }): Json<CreateProperty>,
     ) -> Result<Json<R<String>>, ServerError> {
         sqlx::query(
-            "INSERT INTO tb_property ( product_id,identifier , property_name, description, data_type) VALUES (?, ?, ?, ?,?)",
+            "INSERT INTO tb_property ( product_id,identifier , property_name, description, data_schema) VALUES (?, ?, ?, ?,?)",
         )
             .bind(product_id)
             .bind(identifier)

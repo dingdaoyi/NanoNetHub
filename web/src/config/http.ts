@@ -34,7 +34,7 @@ axios.interceptors.response.use(
  * @param params  请求参数
  * @returns {Promise}
  */
-export function get<T>(url: string, params: object): Promise<T> {
+export function get<T>(url: string, params?: object): Promise<T> {
     return new Promise((resolve, reject) => {
         axios.get(url, {
             params: params,

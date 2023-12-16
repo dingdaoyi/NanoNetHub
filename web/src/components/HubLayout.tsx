@@ -1,24 +1,24 @@
-import {Button, Layout, Menu, theme} from 'antd';
+import {Avatar, Button, Layout, Menu, theme} from 'antd';
 
 const {Sider, Content} = Layout;
-import {useEffect, useState} from "react";
+import {ReactNode, useEffect, useState} from "react";
 import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
     UserOutlined,
-    VideoCameraOutlined
 } from "@ant-design/icons";
 import {Header} from "antd/es/layout/layout";
 
 import {useNavigate} from "react-router-dom";
-import {getUser,UserInfo} from "../store/userInfo.tsx";
+import {getUser, UserInfo} from "../store/userInfo.tsx";
+import "./layout.less"
 
-function HubLayout(params: { children: any }) {
+function HubLayout(params: { children: ReactNode }) {
     const [collapsed, setCollapsed] = useState(false);
     const [user, setUser] = useState<UserInfo>();
 
     useEffect(() => {
-        let initUser = getUser();
+        const initUser = getUser();
         if (initUser) {
             setUser(initUser);
         }
@@ -34,7 +34,10 @@ function HubLayout(params: { children: any }) {
             height: "100vh"
         }}>
             <Sider trigger={null} collapsible collapsed={collapsed}>
-                <div className="demo-logo-vertical"/>
+                <div className="logo-vertical">
+                    <Avatar style={{backgroundColor: '#fde3cf', color: '#f56a00'}}
+                            src={"../assets/react.svg"}/>
+                </div>
                 <Menu
                     theme="dark"
                     mode="inline"
@@ -50,11 +53,11 @@ function HubLayout(params: { children: any }) {
                             icon: <UserOutlined/>,
                             label: '产品管理',
                         },
-                        {
-                            key: '/admin/tsl',
-                            icon: <VideoCameraOutlined/>,
-                            label: '物模型',
-                        },
+                        // {
+                        //     key: '/admin/tsl',
+                        //     icon: <VideoCameraOutlined/>,
+                        //     label: '物模型',
+                        // },
                     ]}
                 />
             </Sider>

@@ -1,8 +1,9 @@
 import {ColumnsType} from "antd/es/table";
-import {productAdd, productDelete, productEdit, productPage, ProductType} from "../../api/productApi.tsx";
+import {productAdd, productDelete, productEdit, productPage, ProductType} from "../../api/productApi.ts";
 import {Button, Form, Input, Modal, Space, Table} from "antd";
 import {useEffect, useState} from "react";
 import {PlusOutlined, SearchOutlined} from "@ant-design/icons";
+import {useNavigate} from "react-router-dom";
 
 
 function editProduct(record: ProductType, setEditeType: (value: ProductType | undefined) => void, setEditModalVisible: (value: boolean) => void) {
@@ -34,7 +35,7 @@ function Product() {
     const [loading, setLoading] = useState(false);
     const [editModalVisible, setEditModalVisible] = useState(false); // 新增这一行
 
-
+    const navigate = useNavigate()
     const columns: ColumnsType<ProductType> = [
         {
             title: '产品名称',
@@ -57,11 +58,13 @@ function Product() {
         {
             title: '操作',
             key: 'action',
-            width: "120px",
+            width: "280px",
             render: (_, record) => (
                 <Space size="middle">
-                    <a onClick={() => editProduct(record, setEditeType, setEditModalVisible)}>编辑</a>
-                    <a onClick={() => deleteProduct(record.id, fetchData)}>删除</a>
+                    <Button type="primary"
+                            onClick={() => editProduct(record, setEditeType, setEditModalVisible)}>编辑</Button>
+                    <Button type="primary" onClick={() => deleteProduct(record.id, fetchData)}>删除</Button>
+                    <Button type="primary" onClick={() => navigate(`/admin/tsl/${record.id}`)}>物模型</Button>
                 </Space>
             ),
         },
