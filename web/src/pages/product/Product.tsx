@@ -1,56 +1,71 @@
 import {ColumnsType} from "antd/es/table";
-import {productPage, ProductType} from "../../api/productApi.tsx";
-import {Button, Input, Space, Table} from "antd";
+import {productAdd, productDelete, productEdit, productPage, ProductType} from "../../api/productApi.tsx";
+import {Button, Form, Input, Modal, Space, Table} from "antd";
 import {useEffect, useState} from "react";
+import {PlusOutlined, SearchOutlined} from "@ant-design/icons";
 
 
-function editProduct(record: ProductType) {
+function editProduct(record: ProductType, setEditeType: (value: ProductType | undefined) => void, setEditModalVisible: (value: boolean) => void) {
     console.log("编辑", record)
+    setEditeType(record)
+    setEditModalVisible(true)
 }
 
-function deleteProduct(id: number | undefined) {
+async function deleteProduct(id: number | undefined, fetchData: () => Promise<void>) {
     console.log("删除", id)
-
+    Modal.confirm({
+        title: '删除产品',
+        content: '确定删除该产品吗？',
+        okText: '确认',
+        cancelText: '取消',
+        onOk: async () => {
+            await productDelete(id as number)
+            await fetchData()
+        },
+    });
 }
-
-const columns: ColumnsType<ProductType> = [
-    {
-        title: '产品名称',
-        dataIndex: 'product_name',
-        key: 'product_name',
-        width: "150px",
-    },
-    {
-        title: '描述',
-        dataIndex: 'description',
-        key: 'description',
-        ellipsis: true,
-    },
-    {
-        title: '创建时间',
-        dataIndex: 'create_time',
-        key: 'create_time',
-        width: "220px",
-    },
-    {
-        title: '操作',
-        key: 'action',
-        width: "120px",
-        render: (_, record) => (
-            <Space size="middle">
-                <a onClick={() => editProduct(record)}>编辑</a>
-                <a onClick={() => deleteProduct(record.id)}>删除</a>
-            </Space>
-        ),
-    },
-];
 
 
 function Product() {
     const [listData, setListData] = useState<ProductType[]>([]);
+    const [editeProductType, setEditeType] = useState<ProductType>();
     const [product_name, setProduct_name] = useState("");
     const [pageParams, setPageParams] = useState({page: 1, size: 10, total: 0});
     const [loading, setLoading] = useState(false);
+    const [editModalVisible, setEditModalVisible] = useState(false); // 新增这一行
+
+
+    const columns: ColumnsType<ProductType> = [
+        {
+            title: '产品名称',
+            dataIndex: 'product_name',
+            key: 'product_name',
+            width: "150px",
+        },
+        {
+            title: '描述',
+            dataIndex: 'description',
+            key: 'description',
+            ellipsis: true,
+        },
+        {
+            title: '创建时间',
+            dataIndex: 'create_time',
+            key: 'create_time',
+            width: "220px",
+        },
+        {
+            title: '操作',
+            key: 'action',
+            width: "120px",
+            render: (_, record) => (
+                <Space size="middle">
+                    <a onClick={() => editProduct(record, setEditeType, setEditModalVisible)}>编辑</a>
+                    <a onClick={() => deleteProduct(record.id, fetchData)}>删除</a>
+                </Space>
+            ),
+        },
+    ];
 
     // 在组件挂载或搜索参数、分页参数改变时触发请求
     const fetchData = async () => {
@@ -72,6 +87,15 @@ function Product() {
     const handlePageChange = (page: number, size: number) => {
         setPageParams({total: pageParams.total, page, size});
     };
+    const handleEditeSubmit = async () => {
+        const productType = editeProductType as ProductType;
+        editeProductType?.id ? await productEdit(productType) : await productAdd(productType);
+        setEditModalVisible(false);
+        fetchData().then(() => setLoading(false))
+    };
+    const handleAdd = () => {
+        editProduct({product_name: "", description: ""}, setEditeType, setEditModalVisible);
+    };
 
     useEffect(() => {
         setLoading(true);
@@ -79,14 +103,23 @@ function Product() {
     }, [pageParams]);
     return (
         <>
-            <Space align="center" style={{marginBottom: 16}}>
-                <Input
-                    placeholder="产品名称"
-                    value={product_name}
-                    width="200px"
-                    onChange={(e) => setProduct_name(e.target.value)}
-                />
-                <Button type="primary" onClick={handleSearch}>搜索</Button> </Space>
+            <Space align="center" style={{
+                marginBottom: 16,
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+            }}>
+                <Space>
+                    <Input
+                        placeholder="产品名称"
+                        value={product_name}
+                        width="200px"
+                        onChange={(e) => setProduct_name(e.target.value)}
+                    />
+                    <Button type="primary" icon={<SearchOutlined/>} onClick={handleSearch}>搜索</Button>
+                </Space>
+                <Button type="primary" icon={<PlusOutlined/>} onClick={handleAdd}>新增</Button>
+            </Space>
             <Table columns={columns}
                    dataSource={listData}
                    loading={loading}
@@ -98,6 +131,33 @@ function Product() {
                        onChange: handlePageChange,
                    }}
             />
+            <Modal
+                title={editeProductType?.id ? "编辑产品" : "新增产品"}
+                open={editModalVisible}
+                destroyOnClose={true}
+                onCancel={() => setEditModalVisible(false)}
+                onOk={async () => {
+                    await handleEditeSubmit();
+                }}
+            >
+                {/* 这里可以放置编辑表单 */}
+                <Form>
+                    <Form.Item label="产品名称">
+                        <Input name="product_name" defaultValue={editeProductType?.product_name}
+                               onChange={(value) => {
+                                   editeProductType!.product_name = value.target.value
+                                   setEditeType(editeProductType)
+                               }}/>
+                    </Form.Item>
+                    <Form.Item label="产品描述">
+                        <Input name="description" defaultValue={editeProductType?.description}
+                               onChange={(value) => {
+                                   editeProductType!.description = value.target.value
+                                   setEditeType(editeProductType)
+                               }}/>
+                    </Form.Item>
+                </Form>
+            </Modal>
         </>
     )
 }

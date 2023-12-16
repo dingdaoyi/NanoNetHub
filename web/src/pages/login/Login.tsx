@@ -8,10 +8,10 @@ import {useNavigate} from "react-router-dom";
 
 const LoginContent = () => {
 
-    let navigate = useNavigate();
-    const onFinish = async (values: any) => {
+    const navigate = useNavigate();
+    const onFinish = async (values: object) => {
 
-        let userinfo = await loginApi(values);
+        const userinfo = await loginApi(values);
         saveUser(userinfo)
         navigate('/')
     };

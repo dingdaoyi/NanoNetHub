@@ -47,6 +47,25 @@ export function get<T>(url: string, params: object): Promise<T> {
     });
 }
 
+
+/**
+ * @param url  请求url
+ * @param params  请求参数
+ * @returns {Promise}
+ */
+export function del<T>(url: string, params?: object): Promise<T> {
+    return new Promise((resolve, reject) => {
+        axios.delete(url, {
+            params: params,
+        }).then((response) => {
+            resolve(response.data);
+        })
+            .catch((error) => {
+                reject(error);
+            });
+    });
+}
+
 /**
  * @param url
  * @param data
