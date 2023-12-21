@@ -1,6 +1,5 @@
 use chrono::{DateTime, NaiveDateTime, TimeZone, Utc};
 use serde::{self, Deserialize, Deserializer, Serializer};
-use serde_json::Value;
 
 const DATE_FORMAT: &str = "%Y-%m-%d %H:%M:%S";
 

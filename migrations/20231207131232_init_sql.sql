@@ -11,25 +11,30 @@ CREATE TABLE tb_product
 -- 属性表
 CREATE TABLE tb_property
 (
-    property_id   INTEGER PRIMARY KEY AUTOINCREMENT,
+    property_id   INTEGER,
     product_id    INTEGER     NOT NULL,
     identifier    TEXT        NOT NULL,
     property_name TEXT        NOT NULL,
     description   TEXT,
     data_schema   VARCHAR(50) NOT NULL,
+    PRIMARY KEY (property_id, product_id),
+    FOREIGN KEY (product_id) REFERENCES tb_product (id),
     UNIQUE (product_id, identifier)
 );
 
 -- 服务表
 CREATE TABLE tb_service
 (
-    service_id   INTEGER PRIMARY KEY AUTOINCREMENT,
+    service_id   INTEGER,
     product_id   INTEGER NOT NULL,
     identifier   TEXT    NOT NULL,
     service_name TEXT    NOT NULL,
     service_type TEXT    NOT NULL,
     description  TEXT,
     properties   TEXT    NOT NULL,
+    command_id   INTEGER,
+    PRIMARY KEY (service_id, product_id),
+    FOREIGN KEY (product_id) REFERENCES tb_product (id),
     UNIQUE (product_id, identifier)
 );
 
@@ -38,10 +43,11 @@ CREATE TABLE tb_service_property
 (
     service_id  INTEGER NOT NULL,
     property_id INTEGER NOT NULL,
+    product_id  INTEGER NOT NULL,
     serial      INTEGER NOT NULL,
-    FOREIGN KEY (service_id) REFERENCES tb_service (service_id),
-    FOREIGN KEY (property_id) REFERENCES tb_property (property_id),
-    UNIQUE (service_id, serial)
+    FOREIGN KEY (service_id, product_id) REFERENCES tb_service (service_id, product_id) ON DELETE CASCADE,
+    FOREIGN KEY (property_id, product_id) REFERENCES tb_property (property_id, product_id),
+    UNIQUE (service_id, serial, product_id)
 );
 
 -- 计量单位表

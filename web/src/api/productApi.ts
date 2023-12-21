@@ -1,4 +1,4 @@
-import {del, post, put} from "../config/http.ts";
+import {del, get, post, put} from "../config/http.ts";
 import {PageResult} from "../common/type_def.ts";
 
 interface ProductType {
@@ -31,11 +31,18 @@ async function productEdit(params: ProductType): Promise<void> {
 }
 
 /**
+ * 修改产品
+ * @param id
+ */
+async function productDetails(id: number): Promise<ProductType> {
+    return await get<ProductType>(`/product/${id}`);
+}
+
+/**
  * 添加产品
  * @param params
  */
 async function productAdd(params: ProductType): Promise<void> {
-    console.log("product edit", params)
     await post<void>('/product', params);
 }
 
@@ -49,6 +56,6 @@ async function productDelete(id: number): Promise<void> {
     await del<void>(`/product/${id}`);
 }
 
-export {productPage, productEdit, productDelete, productAdd}
+export {productPage, productEdit, productDelete, productAdd, productDetails}
 
 export type {ProductType}

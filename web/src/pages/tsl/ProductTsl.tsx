@@ -1,13 +1,20 @@
 import {Link, useParams} from "react-router-dom";
 import {Breadcrumb, Space, Tabs, TabsProps} from "antd";
 import Properties from "./Properties.tsx";
+import EventReport from "./EventReport.tsx";
+import {useEffect, useState} from "react";
+import {productDetails, ProductType} from "../../api/productApi.ts";
 
 function ProductTsl() {
     const {productId} = useParams();
     const productIdAsNumber = parseInt(productId || "0", 10);
+    const [product, setProduct] = useState<ProductType>()
 
-    console.log("物模型", productIdAsNumber)
-
+    useEffect(() => {
+        productDetails(productIdAsNumber).then((res) => {
+            setProduct(res)
+        })
+    }, []);
     const items: TabsProps['items'] = [
         {
             key: 'property',
@@ -17,7 +24,7 @@ function ProductTsl() {
         {
             key: 'event',
             label: '事件',
-            children: '事件',
+            children: <EventReport productId={productIdAsNumber}/>
         },
         {
             key: 'service',
@@ -42,6 +49,9 @@ function ProductTsl() {
                         },
                         {
                             title: '物模型',
+                        },
+                        {
+                            title: product?.product_name,
                         },
                     ]}
                 />

@@ -4,7 +4,9 @@ use axum::routing::{delete, get, post};
 use crate::config::database::get_conn;
 use crate::models::{Property, R, ServerError};
 use crate::models::tls::property::{CreateProperty, PropertyQuery};
+use crate::models::tls::TlsSequence;
 use crate::server::handler::base::Controller;
+use crate::server::handler::product_handler::ProductHandler;
 
 #[derive(Default)]
 pub struct PropertyHandler;
@@ -36,9 +38,15 @@ impl PropertyHandler {
     async fn create_property(
         Json(CreateProperty { product_id, identifier, property_name, description, data_schema }): Json<CreateProperty>,
     ) -> Result<Json<R<String>>, ServerError> {
+        let exists = ProductHandler::exists(product_id).await?;
+        if !exists {
+            return Ok(Json(R::bad_request("产品不存在".to_string())));
+        }
+
         sqlx::query(
-            "INSERT INTO tb_property ( product_id,identifier , property_name, description, data_schema) VALUES (?, ?, ?, ?,?)",
+            "INSERT INTO tb_property ( property_id,product_id,identifier , property_name, description, data_schema) VALUES (?, ?, ?, ?,?,?)",
         )
+            .bind(TlsSequence::property(product_id).next().await?)
             .bind(product_id)
             .bind(identifier)
             .bind(property_name)

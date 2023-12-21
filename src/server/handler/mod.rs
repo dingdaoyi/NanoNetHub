@@ -3,5 +3,6 @@ pub mod base;
 pub mod user_handler;
 pub mod property_handler;
 pub mod unit_handler;
+pub mod service_handler;
 
 

@@ -18,7 +18,8 @@ impl Controller for ProductHandler {
             .route("/product", post(Self::create_product)
                 .put(Self::update))
             .route("/product/page", post(Self::page))
-            .route("/product/:id", delete(Self::delete))
+            .route("/product/:id", delete(Self::delete)
+                .get(Self::details))
     }
 }
 
@@ -60,6 +61,19 @@ impl ProductHandler {
                 Json(R::success_with_data(value)))
     }
 
+    // 分页查询
+    async fn details(
+        Path(id): Path<i32>,
+    ) -> Result<Json<R<Option<Product>>>, ServerError> {
+        let res = sqlx::query_as(
+            "select * from tb_product where id=?"
+        )
+            .bind(id)
+            .fetch_optional(&get_conn())
+            .await?;
+        Ok(Json(R::success_with_data(res)))
+    }
+
     // 修改
     async fn update(
         Json(product): Json<UpdateProduct>,
@@ -81,7 +95,7 @@ impl ProductHandler {
                 Ok(Json(R::success()))
             }
             false => {
-                Ok(Json(R::fail("插入失败".into())))
+                Ok(Json(R::bad_request("插入失败".into())))
             }
         }
     }
@@ -106,5 +120,12 @@ impl ProductHandler {
                 Ok(Json(R::fail("删除失败".into())))
             }
         }
+    }
+    pub async fn exists(id: i32) -> Result<bool, ServerError> {
+        let res = sqlx::query_scalar::<_, bool>("SELECT EXISTS(SELECT * FROM tb_product WHERE id = ?)")
+            .bind(id)
+            .fetch_one(&get_conn())
+            .await?;
+        Ok(res)
     }
 }

@@ -1,5 +1,4 @@
 use serde::{Deserialize, Serialize};
-use sqlx::FromRow;
 use sqlx::types::Json;
 use crate::config::option_serialize::deserialize_option_string;
 
