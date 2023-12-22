@@ -1,7 +1,7 @@
 import {Link, useParams} from "react-router-dom";
 import {Breadcrumb, Space, Tabs, TabsProps} from "antd";
 import Properties from "./Properties.tsx";
-import EventReport from "./EventReport.tsx";
+import TslService from "./TslService.tsx";
 import {useEffect, useState} from "react";
 import {productDetails, ProductType} from "../../api/productApi.ts";
 
@@ -22,14 +22,9 @@ function ProductTsl() {
             children: <Properties productId={productIdAsNumber}/>,
         },
         {
-            key: 'event',
-            label: '事件',
-            children: <EventReport productId={productIdAsNumber}/>
-        },
-        {
             key: 'service',
             label: '服务',
-            children: '服务',
+            children: <TslService productId={productIdAsNumber}/>
         },
         {
             key: 'TSL',

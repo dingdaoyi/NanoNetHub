@@ -4,8 +4,8 @@ use crate::models::tls::TlsSequence;
 use crate::models::{ServerError, Service, R};
 use crate::server::handler::base::Controller;
 use crate::server::handler::product_handler::ProductHandler;
-use axum::extract::{Path, Query};
-use axum::routing::{delete, get, post};
+use axum::extract::Path;
+use axum::routing::{delete, post};
 use axum::{Json, Router};
 use sqlx::{Acquire, Executor};
 
@@ -37,7 +37,7 @@ impl ServiceHandler {
     ///创建服务
     async fn create_service(
         Json(service): Json<CreateService>,
-    ) -> Result<Json<R<String>>, ServerError> {
+    ) -> Result<Json<R<bool>>, ServerError> {
         let exists = ProductHandler::exists(service.product_id).await?;
         if !exists {
             return Ok(Json(R::fail("产品不存在".to_string())));
@@ -73,13 +73,13 @@ impl ServiceHandler {
             ).await?;
         }
         transaction.commit().await?;
-        Ok(Json(R::success()))
+        Ok(Json(R::success_with_data(true)))
     }
     ///服务列表
     async fn list_service(
         Json(ServiceQuery {
                  product_id,
-                 service_types,
+                 service_type,
                  search_param,
              }): Json<ServiceQuery>,
     ) -> Result<Json<R<Vec<Service>>>, ServerError> {
@@ -90,16 +90,9 @@ impl ServiceHandler {
                 sql, search_param, search_param
             )
         }
-        if !service_types.is_empty() {
+        if let Some(service_type) = service_type {
             sql = format!(
-                "{} and service_type in ({})",
-                sql,
-                service_types
-                    .iter()
-                    .map(|s| format!("'{}'", s))
-                    .collect::<Vec<String>>()
-                    .join(",")
-            )
+                "{} and service_type = '{}'", sql, service_type)
         }
         let data = sqlx::query_as::<_, Service>(sql.as_str())
             .bind(product_id)
@@ -108,7 +101,7 @@ impl ServiceHandler {
         Ok(Json(R::success_with_data(data)))
     }
 
-    async fn update_service(Json(service): Json<Service>) -> Result<Json<R<String>>, ServerError> {
+    async fn update_service(Json(service): Json<Service>) -> Result<Json<R<bool>>, ServerError> {
         let mut conn = get_conn().acquire().await?;
         let mut transaction = conn.begin().await?;
         let res = transaction
@@ -158,6 +151,6 @@ impl ServiceHandler {
         }
         transaction.commit().await?;
 
-        Ok(Json(R::success()))
+        Ok(Json(R::success_with_data(true)))
     }
 }

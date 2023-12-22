@@ -60,7 +60,7 @@ pub struct CreateService {
 #[derive(Debug, Deserialize)]
 pub struct ServiceQuery {
     pub product_id: i32,
-    pub service_types: Vec<ServiceType>,
+    pub service_type: Option<ServiceType>,
     #[serde(deserialize_with = "deserialize_option_string")]
     pub search_param: Option<String>,
 }

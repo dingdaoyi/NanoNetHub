@@ -2,6 +2,7 @@
  * 网络请求配置
  */
 import axios from "axios";
+import {Modal} from "antd";
 
 axios.defaults.timeout = 100000;
 axios.defaults.baseURL = "/api";
@@ -25,7 +26,8 @@ axios.interceptors.response.use(
         return response.data;
     },
     (error) => {
-        console.log("请求出错：", error);
+        msag(error.response);
+        return error.response.data;
     }
 );
 
@@ -105,11 +107,14 @@ export function put<T>(url: string, data: object): Promise<T> {
 }
 
 //失败提示
-function msag(err: { response: { status: number; data: R<object>; }; }) {
-    if (err && err.response) {
-        switch (err.response.status) {
+function msag(err: { data: R<object> }) {
+    if (err && err.data) {
+        switch (err.data.code) {
             case 400:
-                alert(err.response.data.msg);
+                Modal.error({
+                    title: "请求参数错误",
+                    content: err.data.msg,
+                });
                 break;
             case 401:
                 alert("未授权，请登录");
@@ -128,7 +133,10 @@ function msag(err: { response: { status: number; data: R<object>; }; }) {
                 break;
 
             case 500:
-                alert("服务器内部错误");
+                Modal.error({
+                    title: "服务器错误",
+                    content: `服务器内部错误: ${err.data.msg}`,
+                });
                 break;
 
             case 501:

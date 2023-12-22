@@ -86,14 +86,14 @@ function getDefinition(schema?: DataSchema): string {
 
 
 /**
- * 分页查询产品
+ * 列表查询
  * @param product_id
  * @param search_param
  */
 async function propertiesList(product_id: number, search_param?: string): Promise<PropertyType[]> {
     return await get<PropertyType[]>(`/property`, {
         product_id: product_id,
-        search_param: search_param
+        search_param: search_param || ''
     });
 }
 
