@@ -1,6 +1,6 @@
 interface PageResult<T> {
     total: number;
-    data: T;
+    data: T[];
 }
 
 interface BaseQuery {

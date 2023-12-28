@@ -4,7 +4,7 @@ const {Sider, Content} = Layout;
 import {ReactNode, useEffect, useState} from "react";
 import {
     MenuFoldOutlined,
-    MenuUnfoldOutlined,
+    MenuUnfoldOutlined, SendOutlined,
     UserOutlined,
 } from "@ant-design/icons";
 import {Header} from "antd/es/layout/layout";
@@ -53,11 +53,11 @@ function HubLayout(params: { children: ReactNode }) {
                             icon: <UserOutlined/>,
                             label: '产品管理',
                         },
-                        // {
-                        //     key: '/admin/tsl',
-                        //     icon: <VideoCameraOutlined/>,
-                        //     label: '物模型',
-                        // },
+                        {
+                            key: '/admin/device',
+                            icon: <SendOutlined/>,
+                            label: '设备管理',
+                        },
                     ]}
                 />
             </Sider>

@@ -2,6 +2,7 @@ use axum::{Json, Router};
 use axum::routing::get;
 use crate::models::ServerError;
 use crate::server::handler::base::Controller;
+use crate::server::handler::device_handler::DeviceHandler;
 use crate::server::handler::product_handler::ProductHandler;
 use crate::server::handler::property_handler::PropertyHandler;
 use crate::server::handler::service_handler::ServiceHandler;
@@ -36,4 +37,5 @@ fn no_need_auth_routers() -> Router {
         .merge(UnitHandler::default().router())
         .merge(PropertyHandler::default().router())
         .merge(ServiceHandler::default().router())
+        .merge(DeviceHandler::default().router())
 }

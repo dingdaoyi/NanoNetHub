@@ -9,6 +9,11 @@ interface ProductType {
     description?: string,
 }
 
+interface ProductDict {
+    id: number,
+    product_name: string,
+}
+
 
 /**
  * 分页查询产品
@@ -20,6 +25,15 @@ async function productPage(params: {
 }): Promise<PageResult<ProductType[]>> {
     return await post<PageResult<ProductType[]>>('/product/page', params);
 }
+
+/**
+ * 分页查询产品
+ * @param params
+ */
+async function productDict(): Promise<ProductDict[]> {
+    return await get<ProductDict[]>('/product/dict');
+}
+
 
 /**
  * 修改产品
@@ -52,10 +66,9 @@ async function productAdd(params: ProductType): Promise<void> {
  * @param id
  */
 async function productDelete(id: number): Promise<void> {
-    console.log("product delete ", id)
     await del<void>(`/product/${id}`);
 }
 
-export {productPage, productEdit, productDelete, productAdd, productDetails}
+export {productPage, productEdit, productDelete, productAdd, productDetails, productDict}
 
-export type {ProductType}
+export type {ProductType, ProductDict}

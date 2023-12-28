@@ -5,6 +5,7 @@ CREATE TABLE tb_product
     create_time  DATETIME    NOT NULL DEFAULT '1000-01-01 00:00:00',
     deleted      INTEGER     NOT NULL DEFAULT 0,
     product_name VARCHAR(50) NOT NULL,
+    product_key  text        NOT NULL,
     description  VARCHAR(50),
     UNIQUE (product_name)
 );

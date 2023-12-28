@@ -34,8 +34,6 @@ function PropertyEdite(params: PropertyEditeProps) {
      * 提交
      */
     function submitEdite() {
-        const fieldsValue = form.getFieldsValue();
-        console.log(fieldsValue)
         form
             .validateFields()
             .then((property) => {
