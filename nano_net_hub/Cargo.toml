@@ -22,5 +22,6 @@ tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 async-trait = "0.1"
 rand = "0.8.5"
+toml = "0.8"
 driver_common = { path = "../driver_common" }
 mqtt_driver = { path = "../mqtt_driver", optional = true }
