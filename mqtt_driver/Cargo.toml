@@ -2,7 +2,7 @@
 name = "mqtt_driver"
 version = "0.1.0"
 edition = "2021"
-
+resolver = '2'
 
 [dependencies]
 rumqttc = { version = "0.23", features = ["default"] }
@@ -12,3 +12,4 @@ serde = { version = "1.0.193", features = ["derive"] }
 serde_json = { version = "1" }
 #chrono = { version = "0.4" }
 tracing = "0.1"
+async-trait = "0.1"

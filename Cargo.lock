@@ -375,6 +375,7 @@ checksum = "1aaf95b3e5c8f23aa320147307562d361db0ae0d51242340f558153b4eb2439b"
 name = "driver_common"
 version = "0.1.0"
 dependencies = [
+ "async-trait",
  "rand",
  "serde",
  "serde_json",
@@ -929,6 +930,7 @@ dependencies = [
 name = "mqtt_driver"
 version = "0.1.0"
 dependencies = [
+ "async-trait",
  "driver_common",
  "rumqttc",
  "serde",

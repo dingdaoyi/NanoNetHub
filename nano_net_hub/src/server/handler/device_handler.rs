@@ -1,10 +1,12 @@
 use axum::{Json, Router};
 use axum::extract::Path;
-use axum::routing::post;
+use axum::routing::{get, post};
+use driver_common::device_service::{CommandParam, CommandResponse};
 use crate::config::database::get_conn;
 use crate::models::{PaginationResponse, R, ServerError};
 use crate::models::common::sqlx_page::{Condition, PageSqlBuilder};
 use crate::models::device::{CreateDevice, Device, DeviceQuery};
+use crate::protocol::device_service_command;
 use crate::server::handler::base::Controller;
 use crate::server::handler::product_handler::ProductHandler;
 
@@ -19,6 +21,7 @@ impl Controller for DeviceHandler {
             .route("/device/page", post(Self::device_page))
             .route("/device/:id", post(Self::delete_device)
                 .get(Self::details))
+            .route("/device/command", get(Self::command))
     }
 }
 
@@ -70,6 +73,14 @@ impl DeviceHandler {
             .fetch_one(&get_conn())
             .await?;
         Ok(res)
+    }
+
+    async fn command() -> Result<Json<CommandResponse>, ServerError> {
+        let mut command = CommandParam::default();
+        command.device_code = "123".into();
+        command.product_key = "aaa".into();
+        let res = device_service_command("mqtt", command).await?;
+        Ok(Json(res))
     }
 
     ///设备详情

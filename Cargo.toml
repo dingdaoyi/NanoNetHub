@@ -4,3 +4,4 @@ members = [
     "mqtt_driver",
     "driver_common"
 ]
+resolver = "2"

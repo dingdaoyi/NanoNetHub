@@ -2,6 +2,7 @@ use crate::{DriverError, Value};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::atomic::{AtomicU32, Ordering};
+use async_trait::async_trait;
 
 static MESSAGE_ID_COUNTER: AtomicU32 = AtomicU32::new(0);
 
@@ -9,10 +10,23 @@ static MESSAGE_ID_COUNTER: AtomicU32 = AtomicU32::new(0);
 pub enum ProtocolMessage {
     #[serde(rename = "Command")]
     Command(CommandParam),
+    #[serde(rename = "CommandResponse")]
+    Response(CommandResponse),
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct CommandParam {
+    pub parent_code: Vec<String>,
+    pub device_code: String,
+    pub group_code: i32,
+    pub product_key: String,
+    pub identifier: Option<String>,
+    pub params: Vec<ProtocolData>,
+}
+
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct CommandResponse {
     pub parent_code: Vec<String>,
     pub device_code: String,
     pub group_code: i32,
@@ -38,19 +52,11 @@ impl ProtocolData {
     }
 }
 
-pub trait DeviceCommand {
-    fn param(&self) -> &CommandParam;
-}
 
-pub trait DeviceService {
-    type Command: DeviceCommand;
-    fn invoke(&self, command: &Self::Command) -> Result<(), DriverError> {
-        let command_param = command.param();
-        println!("command_param: {:?}", command_param);
-        Ok(())
-    }
-
-    fn get_bytes(&self) -> Result<Vec<u8>, DriverError>;
+#[async_trait]
+pub trait DeviceService: Sync + Send {
+    /// 指令下发
+    async fn command(&self, data: CommandParam) -> Result<CommandResponse, DriverError>;
 }
 
 pub trait ConfigProtocol {
