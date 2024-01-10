@@ -31,8 +31,8 @@ pub struct Property {
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct Enum {
-    key: i32,
-    value: String,
+    pub key: i32,
+    pub value: String,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -54,13 +54,6 @@ pub enum DataSchema {
     VaryString {
         len: usize,
         unit: String,
-        unit_name: String,
-    },
-    #[serde(rename = "Float")]
-    Float {
-        unit: String,
-        min: f64,
-        max: f64,
         unit_name: String,
     },
     #[serde(rename = "Boolean")]

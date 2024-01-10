@@ -1,6 +1,6 @@
 import {ColumnsType} from "antd/es/table";
 import {productAdd, productDelete, productEdit, productPage, ProductType} from "../../api/productApi.ts";
-import {Button, Form, Input, Modal, Space, Table} from "antd";
+import {Button, Form, Input, Modal, Space, Table, Typography} from "antd";
 import {useEffect, useState} from "react";
 import {PlusOutlined, SearchOutlined} from "@ant-design/icons";
 import {useNavigate} from "react-router-dom";
@@ -34,6 +34,7 @@ function Product() {
     const [pageParams, setPageParams] = useState({page: 1, size: 10, total: 0});
     const [loading, setLoading] = useState(false);
     const [editModalVisible, setEditModalVisible] = useState(false); // 新增这一行
+    const {Paragraph} = Typography;
 
     const navigate = useNavigate()
     const columns: ColumnsType<ProductType> = [
@@ -48,6 +49,16 @@ function Product() {
             dataIndex: 'description',
             key: 'description',
             ellipsis: true,
+        },
+        {
+            title: 'productKey',
+            dataIndex: 'product_key',
+            key: 'product_key',
+            render: (text) => (
+                <>
+                    <Paragraph copyable>{text}</Paragraph>
+                </>
+            ),
         },
         {
             title: '创建时间',

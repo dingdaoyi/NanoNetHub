@@ -2,6 +2,7 @@ use crate::{DriverError, Value};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::atomic::{AtomicU32, Ordering};
+use std::sync::mpsc::Sender;
 use async_trait::async_trait;
 
 static MESSAGE_ID_COUNTER: AtomicU32 = AtomicU32::new(0);
@@ -34,6 +35,14 @@ pub struct CommandResponse {
     pub params: Vec<ProtocolData>,
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct EventData {
+    pub device_code: String,
+    pub product_key: String,
+    pub identifier: String,
+    pub params: Vec<ProtocolData>,
+}
+
 impl CommandParam {
     pub fn increment_message_id() -> u32 {
         MESSAGE_ID_COUNTER.fetch_add(1, Ordering::SeqCst)
@@ -42,8 +51,8 @@ impl CommandParam {
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct ProtocolData {
-    identifier: String,
-    value: Value,
+    pub identifier: String,
+    pub value: Value,
 }
 
 impl ProtocolData {
@@ -57,6 +66,9 @@ impl ProtocolData {
 pub trait DeviceService: Sync + Send {
     /// 指令下发
     async fn command(&self, data: CommandParam) -> Result<CommandResponse, DriverError>;
+
+    /// 设置接收者
+    fn set_event_sender(&mut self, sender: Sender<EventData>);
 }
 
 pub trait ConfigProtocol {

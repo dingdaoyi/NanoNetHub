@@ -1,7 +1,7 @@
 use axum::{Json, Router};
 use axum::extract::Path;
 use axum::routing::{get, post};
-use driver_common::device_service::{CommandParam, CommandResponse};
+use driver_common::device_service::{CommandParam, CommandResponse, EventData};
 use crate::config::database::get_conn;
 use crate::models::{PaginationResponse, R, ServerError};
 use crate::models::common::sqlx_page::{Condition, PageSqlBuilder};
@@ -12,6 +12,7 @@ use crate::server::handler::product_handler::ProductHandler;
 
 #[derive(Default)]
 pub struct DeviceHandler;
+
 
 impl Controller for DeviceHandler {
     fn router(&self) -> Router {
@@ -26,6 +27,15 @@ impl Controller for DeviceHandler {
 }
 
 impl DeviceHandler {
+    pub async fn get_by_device(device_code: &str, product_id: i32) -> Option<Device> {
+        sqlx::query_as::<_, Device>("select *  from tb_device where device_code = ? and product_id = ?")
+            .bind(device_code)
+            .bind(product_id)
+            .fetch_optional(&get_conn())
+            .await
+            .unwrap_or(None)
+    }
+
     ///添加设备
     async fn create_device(
         Json(device): Json<CreateDevice>,

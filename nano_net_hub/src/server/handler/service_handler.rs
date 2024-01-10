@@ -12,18 +12,6 @@ use sqlx::{Acquire, Executor};
 #[derive(Default)]
 pub struct ServiceHandler;
 
-impl Controller for ServiceHandler {
-    fn router(&self) -> Router {
-        Router::new()
-            .route("/service", post(Self::create_service))
-            .route(
-                "/service/:service_id",
-                delete(Self::delete_service).put(Self::update_service),
-            )
-            .route("/service/list", post(Self::list_service))
-    }
-}
-
 impl ServiceHandler {
     ///删除服务
     async fn delete_service(Path(service_id): Path<i32>) -> Result<Json<R<String>>, ServerError> {
@@ -101,6 +89,20 @@ impl ServiceHandler {
         Ok(Json(R::success_with_data(data)))
     }
 
+    ///根据产品key和标识符获取服务
+    pub async fn service_identifier(identifier: &str, product_id: i32) -> Option<Service> {
+        sqlx::query_as::<_, Service>(
+            r#"
+            select * from  tb_service where product_id =? and identifier = ?
+            "#
+        )
+            .bind(product_id)
+            .bind(identifier)
+            .fetch_optional(&get_conn())
+            .await
+            .unwrap_or(None)
+    }
+
     async fn update_service(Json(service): Json<Service>) -> Result<Json<R<bool>>, ServerError> {
         let mut conn = get_conn().acquire().await?;
         let mut transaction = conn.begin().await?;
@@ -152,5 +154,18 @@ impl ServiceHandler {
         transaction.commit().await?;
 
         Ok(Json(R::success_with_data(true)))
+    }
+}
+
+
+impl Controller for ServiceHandler {
+    fn router(&self) -> Router {
+        Router::new()
+            .route("/service", post(Self::create_service))
+            .route(
+                "/service/:service_id",
+                delete(Self::delete_service).put(Self::update_service),
+            )
+            .route("/service/list", post(Self::list_service))
     }
 }

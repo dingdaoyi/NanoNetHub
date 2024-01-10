@@ -22,8 +22,8 @@ interface ProductDict {
 async function productPage(params: {
     product_name?: string,
     base_query: { page: number, size: number }
-}): Promise<PageResult<ProductType[]>> {
-    return await post<PageResult<ProductType[]>>('/product/page', params);
+}): Promise<PageResult<ProductType>> {
+    return await post<PageResult<ProductType>>('/product/page', params);
 }
 
 /**

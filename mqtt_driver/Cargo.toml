@@ -6,10 +6,12 @@ resolver = '2'
 
 [dependencies]
 rumqttc = { version = "0.23", features = ["default"] }
-tokio = { version = "1.13", features = ["macros", "rt-multi-thread"] }
+tokio = { version = "1.13", features = ["macros", "rt-multi-thread", "test-util"] }
 driver_common = { path = "../driver_common" }
 serde = { version = "1.0.193", features = ["derive"] }
 serde_json = { version = "1" }
 #chrono = { version = "0.4" }
 tracing = "0.1"
 async-trait = "0.1"
+bytes = "1.5.0"
+regex = "1.10"

@@ -46,8 +46,38 @@ impl Display for DriverError {
 #[serde(untagged)]
 pub enum Value {
     INT(i32),
+    DOUBLE(f64),
     BOOL(bool),
     STRING(String),
+}
+
+// 直接提取值的方法：
+impl Value {
+    pub fn into_int(self) -> Option<i32> {
+        match self {
+            Self::INT(value) => Some(value),
+            _ => None,
+        }
+    }
+    pub fn into_bool(self) -> Option<bool> {
+        match self {
+            Self::BOOL(value) => Some(value),
+            _ => None,
+        }
+    }
+
+    pub fn into_double(self) -> Option<f64> {
+        match self {
+            Self::DOUBLE(value) => Some(value),
+            _ => None,
+        }
+    }
+    pub fn into_string(self) -> Option<String> {
+        match self {
+            Self::STRING(value) => Some(value),
+            _ => None,
+        }
+    }
 }
 
 impl From<i32> for Value {
@@ -59,6 +89,12 @@ impl From<i32> for Value {
 impl From<bool> for Value {
     fn from(value: bool) -> Self {
         Value::BOOL(value)
+    }
+}
+
+impl From<f64> for Value {
+    fn from(value: f64) -> Self {
+        Value::DOUBLE(value)
     }
 }
 
@@ -86,6 +122,10 @@ impl Display for Value {
             Value::STRING(value) => {
                 write!(f, "{}", value)
             }
+            Value::DOUBLE(value) => {
+                write!(f, "{}", value)
+            }
         }
     }
 }
+

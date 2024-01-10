@@ -11,16 +11,21 @@ use crate::server::handler::product_handler::ProductHandler;
 #[derive(Default)]
 pub struct PropertyHandler;
 
-impl Controller for PropertyHandler {
-    fn router(&self) -> Router {
-        Router::new()
-            .route("/property", post(Self::create_property))
-            .route("/property", get(Self::property_list))
-            .route("/property/:property_id", delete(Self::delete_property))
-    }
-}
-
 impl PropertyHandler {
+    pub(crate) async fn list_by_ids(ids: Vec<i32>) -> Vec<Property> {
+        let sql = "select * from tb_property where property_id in (?::int4[])";
+        // 使用 `query` 方法进行动态拼接 SQL
+        let mut query = sqlx::query_as(sql);
+        // 迭代 `ids` 并逐个绑定参数
+        for id in ids {
+            query = query.bind(id);
+        }
+        query
+            .fetch_all(&get_conn())
+            .await
+            .unwrap_or(vec![])
+    }
+
     ///删除属性
     async fn delete_property(
         Path(property_id): Path<i32>,
@@ -72,5 +77,14 @@ impl PropertyHandler {
             .fetch_all(&get_conn())
             .await?;
         Ok(Json(R::success_with_data(res)))
+    }
+}
+
+impl Controller for PropertyHandler {
+    fn router(&self) -> Router {
+        Router::new()
+            .route("/property", post(Self::create_property))
+            .route("/property", get(Self::property_list))
+            .route("/property/:property_id", delete(Self::delete_property))
     }
 }

@@ -32,10 +32,10 @@ fn need_auth_routers() -> Router {
 fn no_need_auth_routers() -> Router {
     Router::new()
         .route("/health", get(health))
-        .merge(ProductHandler::default().router())
-        .merge(UserHandler::default().router())
-        .merge(UnitHandler::default().router())
-        .merge(PropertyHandler::default().router())
-        .merge(ServiceHandler::default().router())
-        .merge(DeviceHandler::default().router())
+        .merge(ProductHandler.router())
+        .merge(UserHandler.router())
+        .merge(UnitHandler.router())
+        .merge(PropertyHandler.router())
+        .merge(ServiceHandler.router())
+        .merge(DeviceHandler.router())
 }

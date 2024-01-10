@@ -13,6 +13,7 @@ use sqlx::{Acquire, Executor};
 #[derive(Default)]
 pub struct ProductHandler;
 
+
 impl Controller for ProductHandler {
     fn router(&self) -> Router {
         Router::new()
@@ -24,6 +25,13 @@ impl Controller for ProductHandler {
 }
 
 impl ProductHandler {
+    pub(crate) async fn product_by_product_key(product_key: String) -> Option<Product> {
+        sqlx::query_as("select * from tb_product where product_key=?")
+            .bind(product_key)
+            .fetch_optional(&get_conn())
+            .await
+            .unwrap_or(None)
+    }
     // 创建
     async fn create_product(
         Json(product): Json<CreateProduct>,
@@ -33,7 +41,7 @@ impl ProductHandler {
         transaction
             .execute(
                 sqlx::query(
-                    "INSERT INTO tb_product ( product_name ,product_key, description, deleted, create_time) VALUES (?, ?, ?, ?)",
+                    "INSERT INTO tb_product ( product_name ,product_key, description, deleted, create_time) VALUES (?, ?, ?, ?,?)",
                 )
                     .bind(product.product_name)
                     .bind(product.product_key.unwrap_or(
@@ -51,9 +59,9 @@ impl ProductHandler {
     // 分页查询
     async fn page(
         Json(ProductQuery {
-            product_name,
-            base_query,
-        }): Json<ProductQuery>,
+                 product_name,
+                 base_query,
+             }): Json<ProductQuery>,
     ) -> Result<Json<R<PaginationResponse<Product>>>, ServerError> {
         let mut builder =
             PageSqlBuilder::builder("tb_product", &base_query).where_query("deleted=false");
@@ -94,12 +102,12 @@ impl ProductHandler {
             where id=?
            "#,
         )
-        .bind(product.product_name)
-        .bind(product.description)
-        .bind(product.id)
-        .execute(&get_conn())
-        .await?
-        .rows_affected();
+            .bind(product.product_name)
+            .bind(product.description)
+            .bind(product.id)
+            .execute(&get_conn())
+            .await?
+            .rows_affected();
         match rows_affected > 0 {
             true => Ok(Json(R::success())),
             false => Ok(Json(R::bad_request("插入失败".into()))),
@@ -113,10 +121,10 @@ impl ProductHandler {
            delete from tb_product where id=?
            "#,
         )
-        .bind(id)
-        .execute(&get_conn())
-        .await?
-        .rows_affected();
+            .bind(id)
+            .execute(&get_conn())
+            .await?
+            .rows_affected();
         match rows_affected > 0 {
             true => Ok(Json(R::success())),
             false => Ok(Json(R::fail("删除失败".into()))),

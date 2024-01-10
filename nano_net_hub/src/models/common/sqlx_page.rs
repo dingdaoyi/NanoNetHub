@@ -16,8 +16,8 @@ pub struct PageSql {
 impl PageSql {
     // 执行
     pub async fn execute<T>(&mut self) -> Result<PaginationResponse<T>, ServerError>
-    where
-        T: Send + Unpin + for<'r> sqlx::FromRow<'r, SqlRow>,
+        where
+            T: Send + Unpin + for<'r> sqlx::FromRow<'r, SqlRow>,
     {
         let mut count_query = sqlx::query_scalar::<_, u32>(&self.count_query);
         let mut query = sqlx::query_as::<_, T>(&self.query);
@@ -32,6 +32,10 @@ impl PageSql {
                     query = query.bind(value);
                 }
                 Value::STRING(value) => {
+                    count_query = count_query.bind(value);
+                    query = query.bind(value);
+                }
+                Value::DOUBLE(value) => {
                     count_query = count_query.bind(value);
                     query = query.bind(value);
                 }
@@ -142,7 +146,7 @@ pub enum Condition<'a> {
 impl<'a> Condition<'a> {
     fn to_sql(&self) -> (String, Value) {
         match self {
-            Condition::Equal(field, value) => (format!("{} = ? ", field,), value.clone()),
+            Condition::Equal(field, value) => (format!("{} = ? ", field, ), value.clone()),
             Condition::Like(field, value) => (
                 format!("{} like '%' || ? || '%' ", field),
                 Value::STRING(format!("{}", value)),
@@ -167,9 +171,9 @@ mod testing {
                 direction: Direction::ASC,
             },
         )
-        .condition(Condition::Equal("sex", true.into()))
-        .where_query("age=3")
-        .build();
+            .condition(Condition::Equal("sex", true.into()))
+            .where_query("age=3")
+            .build();
         println!("{:?}", res)
     }
 }

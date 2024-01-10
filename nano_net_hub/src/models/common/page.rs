@@ -20,10 +20,10 @@ impl Display for Direction {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
             Direction::ASC => {
-                write!(f, "{}", "ASC")
+                write!(f, "ASC")
             }
             Direction::DESC => {
-                write!(f, "{}", "DESC")
+                write!(f, "DESC")
             }
         }
     }

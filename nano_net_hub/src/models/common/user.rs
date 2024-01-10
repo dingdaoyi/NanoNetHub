@@ -15,10 +15,10 @@ pub struct UserInfo {
 
 impl UserInfo {
     pub fn default() -> Self {
-        return Self {
+        Self {
             username: "admin".to_string(),
             token: "aaa231".to_string(),
             avatar: None,
-        };
+        }
     }
 }

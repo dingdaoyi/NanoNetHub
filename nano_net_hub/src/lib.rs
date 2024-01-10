@@ -15,6 +15,7 @@ mod config;
 pub mod models;
 mod protocol;
 mod server;
+mod data;
 
 // config sqlite db
 pub type SqlPool = Pool<Sqlite>;
@@ -44,11 +45,11 @@ async fn start_protocol_driver() -> Result<(), ServerError> {
     let mut config = HashMap::new();
     config.insert("host", host);
     config.insert("port", port);
-    if username.is_some() {
-        config.insert("username", username.unwrap());
+    if let Some(username) = username {
+        config.insert("username", username);
     }
-    if password.is_some() {
-        config.insert("password", password.unwrap());
+    if let Some(password) = password {
+        config.insert("password", password);
     }
     config_protocol(config).await?;
     Ok(())

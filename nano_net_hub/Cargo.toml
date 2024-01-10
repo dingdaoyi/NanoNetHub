@@ -6,8 +6,9 @@ resolver = '2'
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [features]
-default = ["mqtt"]
+default = ["mqtt", "sqlite_time_series"]
 mqtt = ["mqtt_driver"]
+sqlite_time_series = []
 [dependencies]
 rusqlite = { version = "0.30", features = ["bundled"] }
 axum = { version = "0.7", features = ["macros"] }
@@ -26,3 +27,4 @@ rand = "0.8.5"
 toml = "0.8"
 driver_common = { path = "../driver_common" }
 mqtt_driver = { path = "../mqtt_driver", optional = true }
+lazy_static = "1.4.0"
