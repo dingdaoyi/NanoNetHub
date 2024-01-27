@@ -1,12 +1,11 @@
 use tracing::info;
+use crate::config::ServerConfig;
 use crate::models::ServerError;
 use crate::server::routers::server_router;
 
-pub mod server_config;
 pub mod routers;
 pub mod handler;
 
-pub use server_config::ServerConfig;
 pub struct Server {
     config: ServerConfig,
 }

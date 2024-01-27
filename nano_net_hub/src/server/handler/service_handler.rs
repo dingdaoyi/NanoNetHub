@@ -91,11 +91,7 @@ impl ServiceHandler {
 
     ///根据产品key和标识符获取服务
     pub async fn service_identifier(identifier: &str, product_id: i32) -> Option<Service> {
-        sqlx::query_as::<_, Service>(
-            r#"
-            select * from  tb_service where product_id =? and identifier = ?
-            "#
-        )
+        sqlx::query_as::<_, Service>("select * from  tb_service where product_id =? and identifier = ?")
             .bind(product_id)
             .bind(identifier)
             .fetch_optional(&get_conn())

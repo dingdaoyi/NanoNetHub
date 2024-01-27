@@ -1,5 +1,8 @@
 [mqtt]
 host = "mqtt.server.com"
-port = "8083"
+port = 8083
 username = "test"
 password = "test"
+[server]
+port = 3121
+host = "0.0.0.0"

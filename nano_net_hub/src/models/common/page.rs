@@ -1,20 +1,16 @@
 use std::fmt::{Display, Formatter};
 use serde::{Deserialize, Serialize};
 
-#[derive(Copy, Clone, Debug, Deserialize)]
+#[derive(Copy, Clone, Debug, Deserialize, Default)]
 pub enum Direction {
     /**
      * 排序方式
      */
+    #[default]
     ASC,
     DESC,
 }
 
-impl Default for Direction {
-    fn default() -> Self {
-        Direction::ASC
-    }
-}
 
 impl Display for Direction {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {

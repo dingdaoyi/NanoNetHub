@@ -14,6 +14,7 @@ pub enum DriverError {
     ProtocolError(String),
     TimeoutError,
     ClientNotInitialized,
+    CastError(String),
 }
 
 impl Display for DriverError {
@@ -38,6 +39,9 @@ impl Display for DriverError {
             DriverError::ClientNotInitialized => {
                 write!(f, "客户端未初始化")
             }
+            DriverError::CastError(msg) => {
+                write!(f, "转换错误: {:?}", msg)
+            }
         }
     }
 }
@@ -53,30 +57,8 @@ pub enum Value {
 
 // 直接提取值的方法：
 impl Value {
-    pub fn into_int(self) -> Option<i32> {
-        match self {
-            Self::INT(value) => Some(value),
-            _ => None,
-        }
-    }
-    pub fn into_bool(self) -> Option<bool> {
-        match self {
-            Self::BOOL(value) => Some(value),
-            _ => None,
-        }
-    }
-
-    pub fn into_double(self) -> Option<f64> {
-        match self {
-            Self::DOUBLE(value) => Some(value),
-            _ => None,
-        }
-    }
-    pub fn into_string(self) -> Option<String> {
-        match self {
-            Self::STRING(value) => Some(value),
-            _ => None,
-        }
+    pub fn into_inner<T>(self) -> Option<T> where T: TryFrom<Value, Error=DriverError> {
+        self.try_into().ok()
     }
 }
 
@@ -86,9 +68,31 @@ impl From<i32> for Value {
     }
 }
 
+impl TryFrom<Value> for i32 {
+    type Error = DriverError;
+
+    fn try_from(value: Value) -> Result<Self, Self::Error> {
+        match value {
+            Value::INT(value) => Ok(value),
+            _ => Err(DriverError::CastError("类型转换错误".to_string())),
+        }
+    }
+}
+
 impl From<bool> for Value {
     fn from(value: bool) -> Self {
         Value::BOOL(value)
+    }
+}
+
+impl TryFrom<Value> for bool {
+    type Error = DriverError;
+
+    fn try_from(value: Value) -> Result<Self, Self::Error> {
+        match value {
+            Value::BOOL(value) => Ok(value),
+            _ => Err(DriverError::CastError("类型转换错误".to_string())),
+        }
     }
 }
 
@@ -98,9 +102,31 @@ impl From<f64> for Value {
     }
 }
 
+impl TryFrom<Value> for f64 {
+    type Error = DriverError;
+
+    fn try_from(value: Value) -> Result<Self, Self::Error> {
+        match value {
+            Value::DOUBLE(value) => Ok(value),
+            _ => Err(DriverError::CastError("类型转换错误".to_string())),
+        }
+    }
+}
+
 impl From<String> for Value {
     fn from(value: String) -> Self {
         Value::STRING(value)
+    }
+}
+
+impl TryFrom<Value> for String {
+    type Error = DriverError;
+
+    fn try_from(value: Value) -> Result<Self, Self::Error> {
+        match value {
+            Value::STRING(value) => Ok(value),
+            _ => Err(DriverError::CastError("类型转换错误".to_string())),
+        }
     }
 }
 
@@ -109,6 +135,7 @@ impl From<&str> for Value {
         Value::STRING(value.to_string())
     }
 }
+
 
 impl Display for Value {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {

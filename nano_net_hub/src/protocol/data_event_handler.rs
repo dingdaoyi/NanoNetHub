@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 use std::sync::mpsc::Receiver;
 use std::time::SystemTime;
+use chrono::{Local, NaiveDateTime};
 use driver_common::device_service::{EventData, ProtocolData};
 use driver_common::Value;
 use crate::data::device_data::TsData;
@@ -32,6 +33,7 @@ async fn handle_event_data(event_data: EventData) {
     if let Some(product) = ProductHandler::product_by_product_key(event_data.product_key).await {
         if let Some(device) = DeviceHandler::get_by_device(&event_data.device_code, product.id).await {
             if let Some(service) = ServiceHandler::service_identifier(&event_data.identifier, product.id).await {
+                tracing::debug!("service:{:?}",service);
                 let properties = service.properties.0;
                 let properties = PropertyHandler::list_by_ids(properties.into_iter()
                     .map(|p| p.property_id).collect()).await;
@@ -49,7 +51,7 @@ async fn handle_event_data(event_data: EventData) {
                                 max,
                                 unit_name
                             } => {
-                                match value.clone().into_int() {
+                                match value.clone().into_inner::<i32>() {
                                     None => {
                                         tracing::debug!("数据解析和服务定义不一致:{}",value);
                                     }
@@ -79,7 +81,7 @@ async fn handle_event_data(event_data: EventData) {
                                 save_property(device.id, None, None, value.clone()).await;
                             }
                             DataSchema::Enum(enums) => {
-                                let key = value.clone().into_int();
+                                let key: Option<i32> = value.clone().into_inner();
                                 if let Some(key) = key {
                                     let enum_value = enums.iter().find(|e| e.key == key);
                                     if let Some(enum_value) = enum_value {
@@ -93,7 +95,7 @@ async fn handle_event_data(event_data: EventData) {
                                 max,
                                 unit_name
                             } => {
-                                match value.clone().into_double() {
+                                match value.clone().into_inner::<f64>() {
                                     None => {
                                         tracing::debug!("数据解析和服务定义不一致:{}",value);
                                     }
@@ -120,11 +122,14 @@ async fn handle_event_data(event_data: EventData) {
 
 async fn save_property(device_id: i32, unit: Option<String>, unit_name: Option<String>, value: Value) {
     let tsdb = get_tsdb();
-    let now = SystemTime::now();
-    let timestamp = now.duration_since(SystemTime::UNIX_EPOCH).unwrap().as_secs();
+    let local_now = Local::now();
+
+    // 将当前本地时间转换为 NaiveDateTime
+    let naive_now: NaiveDateTime = local_now.naive_local();
+
     let res = tsdb.insert(TsData {
-        timestamp: timestamp.try_into().unwrap(),
-        value: value.into(),
+        create_time: naive_now,
+        value,
         device_id,
         unit,
         unit_name,

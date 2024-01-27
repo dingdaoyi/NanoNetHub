@@ -3,6 +3,7 @@ import {Avatar, Button, Layout, Menu, theme} from 'antd';
 const {Sider, Content} = Layout;
 import {ReactNode, useEffect, useState} from "react";
 import {
+    InteractionOutlined,
     MenuFoldOutlined,
     MenuUnfoldOutlined, SendOutlined,
     UserOutlined,
@@ -57,6 +58,22 @@ function HubLayout(params: { children: ReactNode }) {
                             key: '/admin/device',
                             icon: <SendOutlined/>,
                             label: '设备管理',
+                        },
+                        {
+                            key: '/system',
+                            icon: <SendOutlined/>,
+                            label: '系统管理',
+                            children: [
+                                {
+                                    key: '/system/icon',
+                                    label: '图标管理',
+                                    icon: <InteractionOutlined/>
+                                },
+                                {
+                                    key: '/system/user',
+                                    label: '用户管理',
+                                },
+                            ]
                         },
                     ]}
                 />

@@ -1,7 +1,6 @@
 use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
 use sqlx::types::Json;
-use driver_common::device_service::EventData;
 use crate::config::option_serialize::deserialize_option_string;
 use crate::models::common::page::PaginationRequest;
 

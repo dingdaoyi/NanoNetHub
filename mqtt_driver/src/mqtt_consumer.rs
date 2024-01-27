@@ -8,13 +8,12 @@ use bytes::Bytes;
 use std::sync::{Arc, Mutex};
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 use async_trait::async_trait;
-use rumqttc::v5::mqttbytes::v5::{Filter, Publish, PublishProperties};
+use rumqttc::v5::mqttbytes::v5::{Filter, PublishProperties};
 use serde::{Deserialize, Serialize};
 use tokio::sync::oneshot;
 use tokio::sync::oneshot::Sender;
 use tokio::task;
 use std::str;
-use regex::Regex;
 
 const STATIC_TOPIC: &str = "NanoNetHub";
 
@@ -27,7 +26,7 @@ enum MqttTopic {
 impl From<Bytes> for MqttTopic {
     fn from(value: Bytes) -> Self {
         let data: Vec<&str> = value.split(|&c| c == b'/').map(|s| str::from_utf8(s).unwrap_or_default()).collect();
-        match data.as_slice() {
+        match data.as_slice()[data.len() - 3..] {
             [product_key, device_code, "event"] => MqttTopic::Event(product_key.to_string(), device_code.to_string()),
             [product_key, device_code, "command_reply"] => MqttTopic::CommandReply(product_key.to_string(), device_code.to_string()),
             _ => MqttTopic::Event("default_product_key".to_string(), "default_device_code".to_string()),
@@ -189,7 +188,7 @@ impl DeviceService for MqttConsumer {
 }
 
 impl ConfigProtocol for MqttConsumer {
-    fn set_config(&mut self, config: HashMap<String, String>) -> Result<(), DriverError> {
+    fn config(&mut self, config: HashMap<String, String>) -> Result<(), DriverError> {
         let res = MqttConfig::try_from(config)?;
         self.config = res;
         Ok(())
@@ -306,6 +305,7 @@ impl MqttConsumer {
 
 #[cfg(test)]
 mod testing {
+    use regex::Regex;
     use super::*;
     use tokio::sync::oneshot;
 

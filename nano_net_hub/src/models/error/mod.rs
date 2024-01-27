@@ -5,6 +5,7 @@ use axum::Json;
 use driver_common::DriverError;
 use std::fmt::{Display, Formatter};
 use std::io::Error;
+use axum::extract::multipart::MultipartError;
 
 /// 平台统一异常
 #[derive(Debug)]
@@ -36,6 +37,12 @@ impl Display for ServerError {
 }
 
 impl std::error::Error for ServerError {}
+
+impl From<MultipartError> for ServerError {
+    fn from(value: MultipartError) -> Self {
+        ServerError::IoError(value.to_string())
+    }
+}
 
 impl From<std::io::Error> for ServerError {
     fn from(value: Error) -> Self {

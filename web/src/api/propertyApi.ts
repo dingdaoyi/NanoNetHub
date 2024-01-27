@@ -1,4 +1,4 @@
-import {del, get, post} from "../config/http.ts";
+import {del, get, post, put} from "../config/http.ts";
 
 interface PropertyType {
     property_id?: number,
@@ -6,6 +6,8 @@ interface PropertyType {
     identifier: string,
     property_name: string,
     description?: string,
+    property_type: string,
+    icon?: string,
     data_schema?: DataSchema,
     dataType?: string,  // 用于前端展示
 }
@@ -21,7 +23,6 @@ type DataSchema =
     | { Integer: { len: number; unit: string; min: number; max: number; unit_name: string } }
     | { String: { unit: string; unit_name: string } }
     | { VaryString: { len: number; unit: string; unit_name: string } }
-    | { Float: { len: number; unit: string; min: number; max: number; unit_name: string } }
     | { Boolean: { bool_false: string; bool_true: string } }
     | { DateTime: null }
     | {
@@ -66,8 +67,6 @@ function getDefinition(schema?: DataSchema): string {
         return `单位: ${schema.String.unit}`;
     } else if ("VaryString" in schema) {
         return `长度: ${schema.VaryString.len},单位: ${schema.VaryString.unit}`;
-    } else if ("Float" in schema) {
-        return `取值范围: ${schema.Float.min}-${schema.Float.max}`;
     } else if ("Boolean" in schema) {
         return `false: ${schema.Boolean.bool_false}, true: ${schema.Boolean.bool_true}`;
     } else if ("DateTime" in schema) {
@@ -97,51 +96,53 @@ async function propertiesList(product_id: number, search_param?: string): Promis
     });
 }
 
+function parseUnitName(property: PropertyType) {
+    const dataSchema = property.data_schema;
+    if (dataSchema === undefined) {
+        return property
+    }
+    if ("Integer" in dataSchema) {
+        const [unit, unit_name] = dataSchema.Integer.unit.split("|")
+        dataSchema.Integer.unit = unit;
+        dataSchema.Integer.unit_name = unit_name;
+        return property
+    }
+    if ("String" in dataSchema) {
+        const [unit, unit_name] = dataSchema.String.unit.split("|")
+        dataSchema.String.unit = unit;
+        dataSchema.String.unit_name = unit_name;
+        return property
+    }
+    if ("VaryString" in dataSchema) {
+        const [unit, unit_name] = dataSchema.VaryString.unit.split("|")
+        dataSchema.VaryString.unit = unit;
+        dataSchema.VaryString.unit_name = unit_name;
+        return property
+    }
+    if ("Double" in dataSchema) {
+        const [unit, unit_name] = dataSchema.Double.unit.split("|")
+        dataSchema.Double.unit = unit;
+        dataSchema.Double.unit_name = unit_name;
+        return property
+    }
+    return property
+}
+
+/**
+ * 分页查询产品
+ * @param property
+ */
+async function propertyUpdate(property: PropertyType): Promise<void> {
+    return await put<void>(`/property`, parseUnitName(property));
+}
+
+
 /**
  * 分页查询产品
  * @param property
  */
 async function propertyAdd(property: PropertyType): Promise<void> {
-    function parseUnitName() {
-        const dataSchema = property.data_schema;
-        if (dataSchema === undefined) {
-            throw new Error("dataSchema is undefined");
-        }
-        if ("Integer" in dataSchema) {
-            const [unit, unit_name] = dataSchema.Integer.unit.split("|")
-            dataSchema.Integer.unit = unit;
-            dataSchema.Integer.unit_name = unit_name;
-            return
-        }
-        if ("String" in dataSchema) {
-            const [unit, unit_name] = dataSchema.String.unit.split("|")
-            dataSchema.String.unit = unit;
-            dataSchema.String.unit_name = unit_name;
-            return
-        }
-        if ("VaryString" in dataSchema) {
-            const [unit, unit_name] = dataSchema.VaryString.unit.split("|")
-            dataSchema.VaryString.unit = unit;
-            dataSchema.VaryString.unit_name = unit_name;
-            return
-        }
-        if ("Double" in dataSchema) {
-            const [unit, unit_name] = dataSchema.Double.unit.split("|")
-            dataSchema.Double.unit = unit;
-            dataSchema.Double.unit_name = unit_name;
-            return
-        }
-        if ("Float" in dataSchema) {
-            const [unit, unit_name] = dataSchema.Float.unit.split("|")
-            dataSchema.Float.unit = unit;
-            dataSchema.Float.unit_name = unit_name;
-            return
-        }
-    }
-
-    parseUnitName();
-    console.log(property)
-    return await post<void>(`/property`, property);
+    return await post<void>(`/property`, parseUnitName(property)!);
 }
 
 /**
@@ -152,14 +153,6 @@ async function unitList(): Promise<Unit[]> {
 }
 
 /**
- * 创建属性
- * @param property
- */
-async function propertyCreate(property: PropertyType): Promise<PropertyType[]> {
-    return await post<PropertyType[]>(`/property`, property);
-}
-
-/**
  * 删除属性
  * @param id
  */
@@ -167,5 +160,5 @@ async function propertyDelete(id: number): Promise<void> {
     await del<void>(`/property/${id}`,);
 }
 
-export {getDataType, getDefinition, propertiesList, propertyCreate, unitList, propertyAdd, propertyDelete}
+export {getDataType, getDefinition, propertiesList, unitList, propertyAdd, propertyDelete, propertyUpdate}
 export type {PropertyType, DataSchema, Unit}

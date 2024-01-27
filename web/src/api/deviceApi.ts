@@ -1,13 +1,8 @@
 import {del, get, post, put} from "../config/http.ts";
 import {PageResult} from "../common/type_def.ts";
+import moment from "moment";
 
-// pub id: i32,
-//     pub device_code: String,
-//     pub product_id: i32,
-//     pub parent_id: Option<i32>,
-//     pub device_name: Option<String>,
-//     /// 设备原数据
-//     pub device_info: Option<Json<HashMap<String, String>>>,
+
 interface Device {
     id?: number,
     device_code: string,
@@ -15,6 +10,32 @@ interface Device {
     parent_id?: number,
     device_name?: string,
     device_info?: Map<string, string>
+}
+
+interface DeviceLogQuery {
+    device_id: number,
+    identifier: string,
+    timestamp_start: Date,
+    timestamp_end: Date
+}
+
+interface DeviceShadow {
+    device_code: string,
+    property_name: string,
+    description?: string,
+    identifier: string,
+    value: object,
+    unit: string,
+    icon?: string,
+    unit_name: string,
+    data_type: number,
+}
+
+interface DeviceLog {
+    timestamp: string,
+    unit?: string,
+    value: object,
+    unit_name?: string,
 }
 
 
@@ -71,6 +92,40 @@ async function deviceDetails(id: number): Promise<Device> {
     return await get<Device>(`/device/${id}`);
 }
 
-export {deviceDelete, deviceAdd, deviceEdit, devicePage, deviceDetails}
 
-export type {Device}
+/**
+ * 查询一段事件的日志记录
+ * @param param
+ */
+async function deviceLog(param: {
+    timestamp_start: string,
+    timestamp_end: string,
+    device_id: number
+}): Promise<DeviceLog[]> {
+    return await post<DeviceLog[]>(`/device/log`, param);
+}
+
+/**
+ * 设备影子
+ * @param device_id
+ */
+async function device_shadows(device_id: number): Promise<DeviceShadow[]> {
+    return await get<DeviceShadow[]>(`/device/shadows/${device_id}`);
+}
+
+/**
+ * 设备影子
+ * @param query
+ */
+async function listDeviceLog(query: DeviceLogQuery): Promise<DeviceLog[]> {
+    return await post<DeviceLog[]>("/device/logs", {
+        ...query,
+        timestamp_start: moment(query.timestamp_start).format("yyyy-MM-DD HH:mm:ss Z"),
+        timestamp_end: moment(query.timestamp_end).format("yyyy-MM-DD HH:mm:ss Z"),
+    });
+}
+
+
+export {deviceDelete, deviceAdd, deviceEdit, devicePage, deviceDetails, deviceLog, device_shadows, listDeviceLog}
+
+export type {Device, DeviceLog, DeviceShadow, DeviceLogQuery}

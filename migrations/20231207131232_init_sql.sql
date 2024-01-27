@@ -18,6 +18,8 @@ CREATE TABLE tb_property
     property_name TEXT        NOT NULL,
     description   TEXT,
     data_schema   VARCHAR(50) NOT NULL,
+    icon          TEXT,
+    property_type TEXT        NOT NULL default 'Property',
     PRIMARY KEY (property_id, product_id),
     FOREIGN KEY (product_id) REFERENCES tb_product (id),
     UNIQUE (product_id, identifier)

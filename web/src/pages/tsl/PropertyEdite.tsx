@@ -1,7 +1,8 @@
 import {Button, Col, Form, Input, InputNumber, Modal, Radio, Row, Select, Space} from 'antd';
-import {getDataType, propertyAdd, PropertyType, Unit, unitList} from "../../api/propertyApi.ts";
+import {getDataType, propertyAdd, PropertyType, propertyUpdate, Unit, unitList} from "../../api/propertyApi.ts";
 import React, {useEffect, useState} from "react";
 import {MinusCircleOutlined, PlusOutlined} from "@ant-design/icons";
+import {getIconList, Icon} from "../../api/iconApi.ts";
 
 interface PropertyEditeProps {
     visible: boolean;
@@ -20,14 +21,19 @@ function PropertyEdite(params: PropertyEditeProps) {
     const property = params.property;
     property.dataType = getDataType(property.data_schema);
     const [form] = Form.useForm();
-    const [dataSchemaChildren, setDataSchemaChildren] = useState<React.ReactNode>("")
+    const [dataSchemaChildren, setDataSchemaChildren] = useState<React.ReactNode>()
     const [units, setUnits] = useState<Unit[]>([])
     const [limits, setLimits] = useState<NumberLimit>({min: -2147483648, max: 2147483647})
+    const [iconList, setIconList] = useState<Icon[]>([])
     useEffect(() => {
-        unitList().then(setUnits).catch((err) => {
+        getIconList().then(setIconList).catch((err) => {
             console.log(err)
         });
-        changeDataSchema(getDataType(property.data_schema));
+        unitList().then(setUnits).catch((err) => {
+            console.log(err)
+        }).then(() => {
+            changeDataSchema(getDataType(property.data_schema));
+        });
     }, []);
 
     /**
@@ -36,9 +42,18 @@ function PropertyEdite(params: PropertyEditeProps) {
     function submitEdite() {
         form
             .validateFields()
-            .then((property) => {
-                console.log('Received property:',);
-                propertyAdd({...property, product_id: params.product_id}).then(() => {
+            .then((formProperty) => {
+                console.log(formProperty)
+                if (property.property_id) {
+                    propertyUpdate({...property, ...formProperty}).then(() => {
+                        form.resetFields();
+                        params.onCancel();
+                    }).catch((err) => {
+                        console.log(err)
+                    })
+                    return
+                }
+                propertyAdd({...formProperty, product_id: params.product_id}).then(() => {
                     form.resetFields();
                     params.onCancel();
                 }).catch((err) => {
@@ -198,40 +213,6 @@ function PropertyEdite(params: PropertyEditeProps) {
                     </>
                 ));
                 break
-            case "Float":
-                setDataSchemaChildren((
-                    <>
-                        <Row justify={"space-around"}>
-                            <Col span={12}>
-                                <Form.Item name={["data_schema", "Float", "max"]} label="最大值">
-                                    <InputNumber style={{
-                                        width: 120
-                                    }}/>
-                                </Form.Item>
-                            </Col>
-                            <Col span={12}>
-                                <Form.Item name={["data_schema", "Float", "min"]} label="最小值">
-                                    <InputNumber style={{
-                                        width: 120
-                                    }}/>
-                                </Form.Item>
-                            </Col>
-                        </Row>
-                        <Form.Item name={["data_schema", "Float", "unit"]} label="单位">
-                            <Select
-                                showSearch
-                                placeholder="搜索选择"
-                                optionFilterProp="children"
-                                filterOption={filterOption}
-                                options={units.map(unit => ({
-                                    value: `${unit.unit}|${unit.unit_name}`, // 组合两个字段作为 value
-                                    label: `${unit.unit}|${unit.unit_name}`, // 组合两个字段作为 label
-                                }))}
-                            />
-                        </Form.Item>
-                    </>
-                ));
-                break
             case "Boolean":
                 setDataSchemaChildren((
                     <>
@@ -300,6 +281,11 @@ function PropertyEdite(params: PropertyEditeProps) {
     }
 
 
+    const filterIconOption = (input: string, option?: { value: string, key: string }) => {
+        console.log(option);
+        return (option?.key ?? '').toLowerCase().includes(input.toLowerCase())
+    }
+
     return (
         <>
             <Modal title={property?.property_id ? "编辑属性" : "新增属性"}
@@ -315,16 +301,67 @@ function PropertyEdite(params: PropertyEditeProps) {
                 <Form form={form}
                       initialValues={{...property}}
                 >
-                    <Form.Item name="property_name" label="属性名称">
+                    <Form.Item name="property_name" label="属性名称" rules={[
+                        {
+                            required: true,
+                            message: '请输入属性名称',
+                        },
+                    ]}>
                         <Input/>
                     </Form.Item>
-                    <Form.Item name="identifier" label="属性标识">
+                    <Form.Item name="identifier" label="属性标识" rules={[
+                        {
+                            required: true,
+                            message: '请输入属性标识',
+                        },
+                    ]}>
                         <Input/>
                     </Form.Item>
+                    <Row justify={"space-around"}>
+                        <Col span={12}>
+                            <Form.Item name="property_type" label="属性类型" rules={[
+                                {
+                                    required: true,
+                                    message: '请选择属性类型',
+                                },
+                            ]}>
+                                <Select>
+                                    <Select.Option value={"Property"}>上报属性</Select.Option>
+                                    <Select.Option value={"Param"}>控制参数</Select.Option>
+                                    <Select.Option value={"Tag"}>固定标签</Select.Option>
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item name="icon" label="属性图标">
+                                <Select showSearch
+                                        placeholder="搜索选择"
+                                        optionFilterProp="children"
+                                        filterOption={filterIconOption}
+                                >
+                                    {iconList.map(icon => (
+                                        <Select.Option
+                                            key={icon.name}
+                                            value={icon.icon}>
+                                            <Space>
+                                                {icon.name}
+                                                <img src={icon.icon} alt={icon.icon} style={{width: 30, height: 30}}/>
+                                            </Space>
+                                        </Select.Option>
+                                    ))}
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                    </Row>
                     <Form.Item name="description" label="属性描述">
                         <Input/>
                     </Form.Item>
-                    <Form.Item name="dataType" label="数据类型">
+                    <Form.Item name="dataType" label="数据类型" rules={[
+                        {
+                            required: true,
+                            message: '请选择',
+                        },
+                    ]}>
                         <Radio.Group onChange={(event) => changeDataSchema(event.target.value)}>
                             <Radio value="Integer">数字</Radio>
                             <Radio value={"VaryString"}>定长字符串</Radio>
@@ -332,7 +369,6 @@ function PropertyEdite(params: PropertyEditeProps) {
                             <Radio value={"Enum"}>枚举</Radio>
                             <Radio value={"Boolean"}>布尔</Radio>
                             <Radio value={"Double"}>Double</Radio>
-                            <Radio value={"Float"}>Float</Radio>
                             <Radio value={"DateTime"}>DateTime</Radio>
                         </Radio.Group>
                     </Form.Item>

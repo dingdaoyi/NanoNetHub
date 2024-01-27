@@ -11,7 +11,7 @@ mqtt = ["mqtt_driver"]
 sqlite_time_series = []
 [dependencies]
 rusqlite = { version = "0.30", features = ["bundled"] }
-axum = { version = "0.7", features = ["macros"] }
+axum = { version = "0.7", features = ["macros", "multipart"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = { version = "1" }
 tokio = { version = "1.34", features = ["macros", "rt-multi-thread"] }
@@ -28,3 +28,7 @@ toml = "0.8"
 driver_common = { path = "../driver_common" }
 mqtt_driver = { path = "../mqtt_driver", optional = true }
 lazy_static = "1.4.0"
+futures-util = "0.3.30"
+futures = "0.3.30"
+tokio-util = "0.7.10"
+tower-http = { version = "0.5", features = ["fs", "trace"] }

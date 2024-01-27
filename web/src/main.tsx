@@ -11,6 +11,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <ConfigProvider locale={zhCN}>
             <Routes>
                 <Route path="/admin/*" element={<App/>}/>
+                <Route path="/system/*" element={<App/>}/>
                 <Route path="*" element={<App/>}/>
                 <Route path="/login" element={<Login/>}/>
             </Routes>

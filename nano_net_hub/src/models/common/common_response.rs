@@ -1,4 +1,3 @@
-
 use serde::{Deserialize, Serialize};
 use std::option::Option;
 
@@ -7,7 +6,7 @@ pub struct R<T> {
     code: i32,
     success: bool,
     msg: String,
-    data: Option<T>,
+    pub data: Option<T>,
 }
 
 impl<T> R<T> {

@@ -2,6 +2,7 @@ import {Link, useParams} from "react-router-dom";
 import {Breadcrumb, Space, Tabs, TabsProps} from "antd";
 import {useEffect, useState} from "react";
 import {Device, deviceDetails} from "../../api/deviceApi.ts";
+import DeviceLogPage from "./DeviceLogPage.tsx";
 
 function DeviceDetails() {
     const {deviceId} = useParams();
@@ -22,7 +23,7 @@ function DeviceDetails() {
         {
             key: 'deviceLog',
             label: '设备日志',
-            children: '设备日志',
+            children: <DeviceLogPage device_id={parseInt(deviceId!)} product_id={productIdAsNumber}/>,
         },
     ];
     return (

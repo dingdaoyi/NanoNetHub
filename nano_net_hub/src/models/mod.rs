@@ -2,6 +2,7 @@ pub mod tls;
 pub mod error;
 pub mod common;
 pub mod device;
+pub mod icon;
 
 /// 公共导出
 pub use self::error::ServerError;

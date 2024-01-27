@@ -3,6 +3,8 @@ use axum::routing::get;
 use crate::models::ServerError;
 use crate::server::handler::base::Controller;
 use crate::server::handler::device_handler::DeviceHandler;
+use crate::server::handler::file_handler::FileHandler;
+use crate::server::handler::icon_handler::IconHandler;
 use crate::server::handler::product_handler::ProductHandler;
 use crate::server::handler::property_handler::PropertyHandler;
 use crate::server::handler::service_handler::ServiceHandler;
@@ -38,4 +40,6 @@ fn no_need_auth_routers() -> Router {
         .merge(PropertyHandler.router())
         .merge(ServiceHandler.router())
         .merge(DeviceHandler.router())
+        .merge(FileHandler.router())
+        .merge(IconHandler.router())
 }

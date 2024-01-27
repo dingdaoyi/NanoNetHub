@@ -1,14 +1,22 @@
 use axum::{Json, Router};
-use axum::extract::Path;
+use axum::extract::{Path, Query};
 use axum::routing::{get, post};
-use driver_common::device_service::{CommandParam, CommandResponse, EventData};
+use chrono::{Local, NaiveDateTime};
+use serde::{Deserialize, Serialize};
+use driver_common::device_service::{CommandParam, CommandResponse};
+use driver_common::Value;
 use crate::config::database::get_conn;
+use crate::data::device_data::{TsdbResult, TsQuery};
+use crate::data::get_tsdb;
 use crate::models::{PaginationResponse, R, ServerError};
 use crate::models::common::sqlx_page::{Condition, PageSqlBuilder};
 use crate::models::device::{CreateDevice, Device, DeviceQuery};
+use crate::models::tls::property::PropertyQuery;
 use crate::protocol::device_service_command;
 use crate::server::handler::base::Controller;
 use crate::server::handler::product_handler::ProductHandler;
+use crate::server::handler::property_handler::PropertyHandler;
+use crate::config::date_format;
 
 #[derive(Default)]
 pub struct DeviceHandler;
@@ -22,7 +30,9 @@ impl Controller for DeviceHandler {
             .route("/device/page", post(Self::device_page))
             .route("/device/:id", post(Self::delete_device)
                 .get(Self::details))
+            .route("/device/shadows/:device_id", get(Self::device_shadows))
             .route("/device/command", get(Self::command))
+            .route("/device/logs", post(Self::device_logs))
     }
 }
 
@@ -85,6 +95,7 @@ impl DeviceHandler {
         Ok(res)
     }
 
+
     async fn command() -> Result<Json<CommandResponse>, ServerError> {
         let mut command = CommandParam::default();
         command.device_code = "123".into();
@@ -134,5 +145,89 @@ impl DeviceHandler {
             .await
             .map(|value|
                 Json(R::success_with_data(value)))
+    }
+
+
+    ///设备分页查询
+    async fn device_shadows(device_id: Path<i32>) -> Result<Json<R<Vec<DeviceShadow>>>, ServerError> {
+        let Json(R { data, .. }) = Self::details(device_id).await?;
+        match data {
+            None => {
+                return Ok(Json(R::bad_request("设备不存在".to_string())));
+            }
+            Some(device) => {
+                let Json(R { data, .. }) = PropertyHandler::property_list(Query(PropertyQuery { product_id: device.product_id, search_param: None })).await?;
+                tracing::debug!("设备属性列表{:?}", data);
+                match data {
+                    None => {
+                        Ok(Json(R::success_with_data(vec![])))
+                    }
+                    Some(property) => {
+                        let values = get_tsdb().query_last(device.id).await?;
+                        let mut shadows = vec![];
+                        for property in property {
+                            let data_type = property.get_type();
+                            if let Some(result) = values.get(&property.identifier) {
+                                let value = result.value.0.clone();
+                                let shadow = DeviceShadow {
+                                    device_code: device.device_code.clone(),
+                                    property_name: property.property_name,
+                                    description: property.description,
+                                    identifier: property.identifier,
+                                    value,
+                                    unit: result.unit.clone().unwrap_or("".into()),
+                                    icon: property.icon,
+                                    unit_name: result.unit_name.clone().unwrap_or("".into()),
+                                    data_type,
+                                };
+                                shadows.push(shadow);
+                            }
+                        }
+                        Ok(Json(R::success_with_data(shadows)))
+                    }
+                }
+            }
+        }
+    }
+
+
+    ///设备分页查询
+    async fn device_logs(Json(query): Json<DeviceLogQuery>) -> Result<Json<R<Vec<TsdbResult>>>, ServerError> {
+        let values = get_tsdb().query(query.into()).await?;
+        Ok(Json(R::success_with_data(values)))
+    }
+}
+
+#[derive(Debug, Serialize)]
+struct DeviceShadow {
+    device_code: String,
+    property_name: String,
+    description: Option<String>,
+    identifier: String,
+    value: Value,
+    unit: String,
+    icon: Option<String>,
+    unit_name: String,
+    data_type: u16,
+}
+
+#[derive(Deserialize, Debug)]
+struct DeviceLogQuery {
+    device_id: i32,
+    identifier: String,
+    #[serde(with = "date_format")]
+    timestamp_start: Option<chrono::NaiveDateTime>,
+    #[serde(with = "date_format")]
+    timestamp_end: Option<chrono::NaiveDateTime>,
+}
+
+impl From<DeviceLogQuery> for TsQuery {
+    fn from(query: DeviceLogQuery) -> Self {
+        Self {
+            timestamp_start: query.timestamp_start.unwrap_or(Local::now().naive_local()),
+            timestamp_end: query.timestamp_end.unwrap_or(Local::now().naive_local()),
+            device_id: query.device_id,
+            identifier: Some(query.identifier),
+        }
     }
 }

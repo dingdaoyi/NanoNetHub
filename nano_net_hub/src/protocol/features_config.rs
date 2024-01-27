@@ -8,7 +8,7 @@ use crate::protocol::data_event_handler::handle_event;
 
 static DEVICE_SERVICES: OnceLock<HashMap<&'static str, Box<dyn DeviceService + 'static>>> = OnceLock::new();
 
-pub async fn config_protocol(config: HashMap<&str, &str>) -> Result<(), ServerError> {
+pub async fn config_protocol(config: HashMap<String, String>) -> Result<(), ServerError> {
     let mut map = HashMap::new();
     let (tx, rx) = mpsc::channel::<EventData>();
     #[cfg(feature = "mqtt")]
@@ -29,8 +29,9 @@ pub async fn device_service_command(name: &str, command_param: CommandParam) -> 
 }
 
 #[cfg(feature = "mqtt")]
-pub async fn init_mqtt_driver(config: HashMap<&str, &str>, tx: Sender<EventData>) -> Result<Box<dyn DeviceService>, ServerError> {
+pub async fn init_mqtt_driver(config: HashMap<String, String>, tx: Sender<EventData>) -> Result<Box<dyn DeviceService>, ServerError> {
     use mqtt_driver::MqttConsumer;
+    
     let mut mqtt_consumer = MqttConsumer::default();
     mqtt_consumer.config(config)?;
     mqtt_consumer.set_event_sender(tx);

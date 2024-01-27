@@ -72,12 +72,5 @@ pub trait DeviceService: Sync + Send {
 }
 
 pub trait ConfigProtocol {
-    fn config(&mut self, config: HashMap<&str, &str>) -> Result<(), DriverError> {
-        let config: HashMap<String, String> = config
-            .iter()
-            .map(|(k, v)| (k.to_string(), v.to_string()))
-            .collect::<HashMap<String, String>>();
-        self.set_config(config)
-    }
-    fn set_config(&mut self, config: HashMap<String, String>) -> Result<(), DriverError>;
+    fn config(&mut self, config: HashMap<String, String>) -> Result<(), DriverError>;
 }
