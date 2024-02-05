@@ -1,12 +1,10 @@
 use std::collections::HashMap;
 use std::sync::mpsc::Receiver;
-use std::time::SystemTime;
 use chrono::{Local, NaiveDateTime};
 use driver_common::device_service::{EventData, ProtocolData};
 use driver_common::Value;
 use crate::data::device_data::TsData;
 use crate::data::get_tsdb;
-use crate::models::device::Device;
 use crate::models::Property;
 use crate::models::tls::property::DataSchema;
 use crate::server::handler::device_handler::DeviceHandler;

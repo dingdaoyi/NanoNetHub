@@ -11,7 +11,7 @@ import {
 import {Header} from "antd/es/layout/layout";
 
 import {useNavigate} from "react-router-dom";
-import {getUser, UserInfo} from "../store/userInfo.tsx";
+import {getToken, UserInfo} from "../store/userInfo.tsx";
 import "./layout.less"
 
 function HubLayout(params: { children: ReactNode }) {
@@ -19,7 +19,7 @@ function HubLayout(params: { children: ReactNode }) {
     const [user, setUser] = useState<UserInfo>();
 
     useEffect(() => {
-        const initUser = getUser();
+        const initUser = getToken();
         if (initUser) {
             setUser(initUser);
         }

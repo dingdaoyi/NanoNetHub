@@ -1,3 +1,5 @@
+extern crate core;
+
 use std::env;
 use crate::config::database::DataSourceType;
 use crate::models::ServerError;
@@ -6,6 +8,7 @@ use crate::server::Server;
 use sqlx::sqlite::SqliteRow;
 use sqlx::{Pool, Sqlite};
 use crate::config::{get_config, MqttConfig};
+use crate::server::handler::user_handler::set_auth_config;
 
 mod config;
 pub mod models;
@@ -20,6 +23,7 @@ pub type SqlRow = SqliteRow;
 pub async fn run_server() -> Result<(), ServerError> {
     let config = get_config();
     DataSourceType::Sqlite.init_pool().await?;
+    set_auth_config(config.auth.clone());
     setup_logger().await?;
     #[cfg(feature = "mqtt")]
     start_protocol_driver(config.mqtt).await?;

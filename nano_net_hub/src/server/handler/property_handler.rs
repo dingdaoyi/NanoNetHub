@@ -1,7 +1,6 @@
 use axum::{Json, Router};
 use axum::extract::{Path, Query};
 use axum::routing::{delete, get, post};
-use sqlx::Error;
 use crate::config::database::get_conn;
 use crate::models::{Property, R, ServerError};
 use crate::models::tls::property::{CreateProperty, PropertyQuery};

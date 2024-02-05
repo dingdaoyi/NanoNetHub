@@ -32,7 +32,7 @@ interface DeviceShadow {
 }
 
 interface DeviceLog {
-    timestamp: string,
+    create_time: string,
     unit?: string,
     value: object,
     unit_name?: string,

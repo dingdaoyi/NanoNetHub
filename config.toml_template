@@ -6,3 +6,8 @@ password = "test"
 [server]
 port = 3121
 host = "0.0.0.0"
+[auth]
+username = "admin"
+password ="123456"
+jwt_secret = "aaabbbccc"
+expire_minutes =120

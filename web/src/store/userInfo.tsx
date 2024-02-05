@@ -1,20 +1,17 @@
-interface UserInfo{
-    username:string;
-    avatar:string;
+interface UserInfo {
+    username: string;
+    avatar: string;
     token: string;
 }
-function saveUser(user:UserInfo):void{
-    const userString = JSON.stringify(user);
-    console.log("用户信息:",userString)
-    localStorage.setItem('user', userString);
-}
-function getUser(): UserInfo | null {
-    const userString = localStorage.getItem('user');
-    if (userString) {
-        return JSON.parse(userString);
-    }
-    return null;
+
+function saveToken(token: string): void {
+    console.log("用户信息:", token)
+    localStorage.setItem('token', token);
 }
 
-export {getUser, saveUser};
+function getToken(): string | null {
+    return localStorage.getItem('token');
+}
+
+export {getToken, saveToken};
 export type {UserInfo};

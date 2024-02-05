@@ -8,6 +8,7 @@ use std::io::Read;
 pub use server_config::ServerConfig;
 pub use server_config::MqttConfig;
 pub use server_config::Config;
+pub use server_config::AuthConfig;
 
 pub fn get_config() -> Config {
     let mut toml_str = String::new();

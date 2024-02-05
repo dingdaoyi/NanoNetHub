@@ -2,7 +2,7 @@ import {Button, Checkbox, Form, Input} from 'antd';
 import './login.less'
 import logo from "../../assets/react.svg"
 import {loginApi, LoginType} from "../../api/userAip.ts"
-import {saveUser} from "../../store/userInfo.tsx";
+import {saveToken} from "../../store/userInfo.tsx";
 import {useNavigate} from "react-router-dom";
 
 
@@ -11,8 +11,8 @@ const LoginContent = () => {
     const navigate = useNavigate();
     const onFinish = async (values: object) => {
 
-        const userinfo = await loginApi(values);
-        saveUser(userinfo)
+        const token = await loginApi(values);
+        saveToken(token)
         navigate('/')
     };
 

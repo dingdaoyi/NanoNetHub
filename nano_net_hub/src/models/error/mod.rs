@@ -15,6 +15,7 @@ pub enum ServerError {
     IoError(String),
     SqlxError(sqlx::Error),
     DriverError(DriverError),
+    AuthError(AuthError),
 }
 
 impl Display for ServerError {
@@ -32,11 +33,29 @@ impl Display for ServerError {
             ServerError::DriverError(error) => {
                 write!(f, "IO异常: {:?}", error)
             }
+            ServerError::AuthError(error) => {
+                write!(f, "IO异常: {:?}", error)
+            }
         }
     }
 }
 
 impl std::error::Error for ServerError {}
+
+
+#[derive(Debug)]
+pub enum AuthError {
+    WrongCredentials,
+    MissingCredentials,
+    TokenCreation,
+    InvalidToken,
+}
+
+impl From<AuthError> for ServerError {
+    fn from(value: AuthError) -> Self {
+        ServerError::AuthError(value)
+    }
+}
 
 impl From<MultipartError> for ServerError {
     fn from(value: MultipartError) -> Self {
@@ -87,6 +106,10 @@ impl IntoResponse for ServerError {
                     StatusCode::INTERNAL_SERVER_ERROR,
                     R::<String>::fail(error.to_string()),
                 )
+            }
+            ServerError::AuthError(_) => {
+                (StatusCode::UNAUTHORIZED, R::<String>::fail_with_code(
+                    401, "认证失败".to_string()))
             }
         };
         let body = Json(error_message);

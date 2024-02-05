@@ -5,6 +5,16 @@ use serde::Deserialize;
 pub struct Config {
     pub mqtt: Option<MqttConfig>,
     pub server: ServerConfig,
+    pub auth: AuthConfig,
+}
+
+
+#[derive(Debug, Deserialize, Clone)]
+pub struct AuthConfig {
+    pub username: String,
+    pub expire_minutes: usize,
+    pub password: String,
+    pub jwt_secret: String,
 }
 
 #[derive(Debug, Deserialize)]

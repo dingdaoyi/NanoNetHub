@@ -1,7 +1,7 @@
 use axum::{Json, Router};
 use axum::extract::{Path, Query};
 use axum::routing::{get, post};
-use chrono::{Local, NaiveDateTime};
+use chrono::Local;
 use serde::{Deserialize, Serialize};
 use driver_common::device_service::{CommandParam, CommandResponse};
 use driver_common::Value;

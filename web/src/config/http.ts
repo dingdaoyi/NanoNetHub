@@ -14,7 +14,13 @@ interface R<T> {
     data?: T,
 }
 
-
+axios.interceptors.request.use((config) => {
+    const token = localStorage.getItem('token');
+    if (token != null) {
+        config.headers.Authorization = 'Bearer ' + token;
+    }
+    return config;
+});
 /**
  * http response 拦截器
  */
@@ -99,7 +105,6 @@ export function put<T>(url: string, data: object): Promise<T> {
                 resolve(response.data);
             },
             (err) => {
-                msag(err.response);
                 reject(err);
             }
         );
@@ -117,9 +122,16 @@ function msag(err: { data: R<object> }) {
                 });
                 break;
             case 401:
-                alert("未授权，请登录");
+                Modal.error({
+                    title: "请求参数错误",
+                    content: err.data.msg,
+                    onOk: () => {
+                        console.log("token过期");
+                        localStorage.removeItem("token");
+                        window.location.href = "/#/login";
+                    }
+                });
                 break;
-
             case 403:
                 alert("拒绝访问");
                 break;
