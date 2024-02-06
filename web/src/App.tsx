@@ -13,6 +13,7 @@ function App() {
         <HubLayout>
             <Routes>
                 <Route path={'product'} element={<Product/>}/>
+                <Route path={'*'} element={<Product/>}/>
                 <Route path={'tsl/:productId'} Component={ProductTsl}/>
                 <Route path={'device'} Component={DeviceInfo}/>
                 <Route path={'icon'} Component={IconPage}/>

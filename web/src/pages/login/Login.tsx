@@ -1,6 +1,6 @@
 import {Button, Checkbox, Form, Input} from 'antd';
 import './login.less'
-import logo from "../../assets/react.svg"
+import logo from "../../../assets/react.svg"
 import {loginApi, LoginType} from "../../api/userAip.ts"
 import {saveToken} from "../../store/userInfo.tsx";
 import {useNavigate} from "react-router-dom";

@@ -126,7 +126,6 @@ function msag(err: { data: R<object> }) {
                     title: "请求参数错误",
                     content: err.data.msg,
                     onOk: () => {
-                        console.log("token过期");
                         localStorage.removeItem("token");
                         window.location.href = "/#/login";
                     }
