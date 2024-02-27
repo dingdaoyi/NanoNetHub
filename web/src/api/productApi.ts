@@ -1,19 +1,6 @@
-import {del, get, post, put} from "../config/http.ts";
-import {PageResult} from "../common/type_def.ts";
-
-interface ProductType {
-    id?: number,
-    create_time?: string,
-    deleted?: boolean,
-    product_name: string,
-    description?: string,
-}
-
-interface ProductDict {
-    id: number,
-    product_name: string,
-}
-
+import {del, get, post, put} from "../utils/http.ts";
+import {PageResult} from "../types/type_def.ts";
+import {ProductDict, ProductType} from "../types/api.ts";
 
 /**
  * 分页查询产品
@@ -70,5 +57,3 @@ async function productDelete(id: number): Promise<void> {
 }
 
 export {productPage, productEdit, productDelete, productAdd, productDetails, productDict}
-
-export type {ProductType, ProductDict}

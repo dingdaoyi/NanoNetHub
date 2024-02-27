@@ -21,7 +21,7 @@ static AUTH_CONFIG: OnceLock<AuthConfig> = OnceLock::new();
 pub fn set_auth_config(auth: AuthConfig) {
     AUTH_CONFIG
         .set(auth)
-        .expect("Auth config has already been set");
+        .expect("Auth utils has already been set");
 }
 
 pub fn get_auth_config() -> Option<&'static AuthConfig> {

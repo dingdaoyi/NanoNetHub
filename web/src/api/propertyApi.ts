@@ -1,38 +1,5 @@
-import {del, get, post, put} from "../config/http.ts";
-
-interface PropertyType {
-    property_id?: number,
-    product_id: number,
-    identifier: string,
-    property_name: string,
-    description?: string,
-    property_type: string,
-    icon?: string,
-    data_schema?: DataSchema,
-    dataType?: string,  // 用于前端展示
-}
-
-interface Unit {
-    id: number,
-    unit: string,
-    unit_name: string,
-    unit_description: string,
-}
-
-type DataSchema =
-    | { Integer: { len: number; unit: string; min: number; max: number; unit_name: string } }
-    | { String: { unit: string; unit_name: string } }
-    | { VaryString: { len: number; unit: string; unit_name: string } }
-    | { Boolean: { bool_false: string; bool_true: string } }
-    | { DateTime: null }
-    | {
-    Enum: Array<{
-        key: string;
-        value: string;
-    }>
-}
-    | { Double: { len: number; unit: string; min: number; max: number; unit_name: string } };
-
+import {del, get, post, put} from "@/utils/http.ts";
+import {DataSchema, PropertyType, Unit} from "@/types/api.ts";
 
 // 添加 getType 方法
 function getDataType(schema?: DataSchema): string {
@@ -161,4 +128,3 @@ async function propertyDelete(id: number): Promise<void> {
 }
 
 export {getDataType, getDefinition, propertiesList, unitList, propertyAdd, propertyDelete, propertyUpdate}
-export type {PropertyType, DataSchema, Unit}

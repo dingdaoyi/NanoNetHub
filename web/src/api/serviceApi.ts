@@ -1,19 +1,5 @@
-import {del, post, put} from "../config/http.ts";
-
-interface PropertyRef {
-    property_id: number,
-    serial: number,
-}
-
-interface Service {
-    service_id?: number,
-    product_id: number,
-    identifier: string,
-    service_name: string,
-    service_type: "EventReport" | "Command" | "CommandResponse",
-    description: string,
-    properties: PropertyRef[],
-}
+import {del, post, put} from "../utils/http.ts";
+import {Service} from "@/types/api.ts";
 
 /**
  * 服务添加
@@ -49,5 +35,3 @@ function listService(params: { service_type?: string, product_id?: number, searc
 
 
 export {listService, addService, updateService, serviceDelete}
-
-export type {Service, PropertyRef}

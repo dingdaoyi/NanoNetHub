@@ -1,10 +1,6 @@
-import {post} from "../config/http.ts";
+import {post} from "../utils/http.ts";
+import {LoginType} from "@/types/api.ts";
 
-type LoginType = {
-    username?: string;
-    password?: string;
-    remember?: string;
-};
 
 /**
  * 登录
@@ -17,4 +13,3 @@ async function loginApi(params: LoginType) {
 export {
     loginApi
 };
-export type {LoginType};

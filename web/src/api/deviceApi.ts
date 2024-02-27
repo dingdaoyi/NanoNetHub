@@ -1,43 +1,6 @@
-import {del, get, post, put} from "../config/http.ts";
-import {PageResult} from "../common/type_def.ts";
+import {del, get, post, put} from "../utils/http.ts";
 import moment from "moment";
-
-
-interface Device {
-    id?: number,
-    device_code: string,
-    product_id: number,
-    parent_id?: number,
-    device_name?: string,
-    device_info?: Map<string, string>
-}
-
-interface DeviceLogQuery {
-    device_id: number,
-    identifier: string,
-    timestamp_start: Date,
-    timestamp_end: Date
-}
-
-interface DeviceShadow {
-    device_code: string,
-    property_name: string,
-    description?: string,
-    identifier: string,
-    value: object,
-    unit: string,
-    icon?: string,
-    unit_name: string,
-    data_type: number,
-}
-
-interface DeviceLog {
-    create_time: string,
-    unit?: string,
-    value: object,
-    unit_name?: string,
-}
-
+import {DeviceLog, Device, DeviceShadow, DeviceLogQuery, PageResult} from "../types/api.ts";
 
 /**
  * 分页查询设备

@@ -16,7 +16,7 @@ mod protocol;
 mod server;
 mod data;
 
-// config sqlite db
+// utils sqlite db
 pub type SqlPool = Pool<Sqlite>;
 pub type SqlRow = SqliteRow;
 

@@ -1,11 +1,5 @@
-import {del, get, post, put} from "../config/http.js";
-
-interface Icon {
-    id?: number,
-    name: string,
-    icon: string,
-    default_icon?: boolean,
-}
+import {del, get, post, put} from "@/utils/http.js";
+import {Icon} from "@/types/api.ts";
 
 /**
  *
