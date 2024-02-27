@@ -1,4 +1,4 @@
-import {del, get, post, put} from "../utils/http.ts";
+import {del, get, post, put} from "@/utils/http.ts";
 import moment from "moment";
 import {DeviceLog, Device, DeviceShadow, DeviceLogQuery, PageResult} from "../types/api.ts";
 

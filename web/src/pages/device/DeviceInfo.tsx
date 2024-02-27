@@ -3,8 +3,9 @@ import {useNavigate} from "react-router-dom";
 import {ColumnsType} from "antd/es/table";
 import {Button, Form, Input, Modal, Select, Space, Table} from "antd";
 import {PlusOutlined, SearchOutlined} from "@ant-design/icons";
-import {Device, deviceAdd, deviceDelete, deviceEdit, devicePage} from "../../api/deviceApi.ts";
-import {ProductDict, productDict} from "../../api/productApi.ts";
+import {Device, deviceAdd, deviceDelete, deviceEdit, devicePage} from "@/api/deviceApi.ts";
+import {productDict} from "@/api/productApi.ts";
+import {ProductDict} from "@/types/api.ts";
 
 function DeviceInfo() {
 

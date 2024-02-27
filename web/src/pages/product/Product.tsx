@@ -1,9 +1,10 @@
 import {ColumnsType} from "antd/es/table";
-import {productAdd, productDelete, productEdit, productPage, ProductType} from "../../api/productApi.ts";
+import {productAdd, productDelete, productEdit, productPage} from "@/api/productApi.ts";
 import {Button, Form, Input, Modal, Space, Table, Typography} from "antd";
 import {useEffect, useState} from "react";
 import {PlusOutlined, SearchOutlined} from "@ant-design/icons";
 import {useNavigate} from "react-router-dom";
+import {ProductType} from "@/types/api.ts";
 
 
 function editProduct(record: ProductType, setEditeType: (value: ProductType | undefined) => void, setEditModalVisible: (value: boolean) => void) {

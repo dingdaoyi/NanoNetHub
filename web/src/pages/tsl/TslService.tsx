@@ -1,9 +1,10 @@
 import {ColumnsType} from "antd/es/table";
 import {Button, Form, Input, InputNumber, message, Modal, Select, Space, Table} from "antd";
 import {MinusCircleOutlined, PlusOutlined, SearchOutlined} from "@ant-design/icons";
-import {addService, listService, Service, serviceDelete, updateService} from "../../api/serviceApi.ts";
+import {addService, listService, serviceDelete, updateService} from "@/api/serviceApi.ts";
 import {useEffect, useState} from "react";
-import {propertiesList, PropertyType} from "../../api/propertyApi.ts";
+import {propertiesList} from "@/api/propertyApi.ts";
+import {PropertyType, Service} from "@/types/api.ts";
 
 interface EventReportProps {
     productId: number;

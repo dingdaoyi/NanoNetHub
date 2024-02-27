@@ -1,6 +1,5 @@
-import {del, get, post, put} from "../utils/http.ts";
-import {PageResult} from "../types/type_def.ts";
-import {ProductDict, ProductType} from "../types/api.ts";
+import {del, get, post, put} from "@/utils/http.ts";
+import {ProductDict, ProductType, PageResult} from "@/types/api.ts";
 
 /**
  * 分页查询产品

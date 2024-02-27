@@ -1,7 +1,7 @@
 import {Link, useParams} from "react-router-dom";
 import {Breadcrumb, Space, Tabs, TabsProps} from "antd";
 import {useEffect, useState} from "react";
-import {Device, deviceDetails} from "../../api/deviceApi.ts";
+import {Device, deviceDetails} from "@/api/deviceApi.ts";
 import DeviceLogPage from "./DeviceLogPage.tsx";
 
 function DeviceDetails() {

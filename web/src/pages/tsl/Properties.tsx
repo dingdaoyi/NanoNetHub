@@ -1,9 +1,10 @@
 import {ColumnsType} from "antd/es/table";
 import {Button, Input, Modal, Space, Table} from "antd";
-import {getDataType, getDefinition, propertiesList, propertyDelete, PropertyType} from "../../api/propertyApi.ts";
+import {getDataType, getDefinition, propertiesList, propertyDelete} from "@/api/propertyApi.ts";
 import {useEffect, useState} from "react";
 import {PlusOutlined, SearchOutlined} from "@ant-design/icons";
 import PropertyEdite from "./PropertyEdite.tsx";
+import {PropertyType} from "@/types/api.ts";
 
 interface PropertiesProps {
     productId: number;
@@ -18,6 +19,7 @@ function Properties(params: PropertiesProps) {
         product_id: params.productId,
         property_name: '',
         identifier: '',
+        property_type: ''
     };
     const [editeProperty, setEditeProperty] = useState<PropertyType>(defaultProperty)
     // 在组件挂载或搜索参数、分页参数改变时触发请求

@@ -1,4 +1,4 @@
-import {post} from "../utils/http.ts";
+import {post} from "@/utils/http.ts";
 import {LoginType} from "@/types/api.ts";
 
 

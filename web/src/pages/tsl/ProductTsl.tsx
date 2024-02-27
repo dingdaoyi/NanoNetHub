@@ -3,7 +3,8 @@ import {Breadcrumb, Space, Tabs, TabsProps} from "antd";
 import Properties from "./Properties.tsx";
 import TslService from "./TslService.tsx";
 import {useEffect, useState} from "react";
-import {productDetails, ProductType} from "../../api/productApi.ts";
+import {productDetails} from "@/api/productApi.ts";
+import {ProductType} from "@/types/api.ts";
 
 function ProductTsl() {
     const {productId} = useParams();

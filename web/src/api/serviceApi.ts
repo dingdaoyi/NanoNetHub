@@ -1,4 +1,4 @@
-import {del, post, put} from "../utils/http.ts";
+import {del, post, put} from "@/utils/http.ts";
 import {Service} from "@/types/api.ts";
 
 /**

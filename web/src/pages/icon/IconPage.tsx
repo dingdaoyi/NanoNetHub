@@ -1,6 +1,6 @@
 import {ColumnsType} from "antd/es/table";
 import {Button, Form, Image, Input, message, Modal, Space, Table, Upload} from "antd";
-import {addIcon, deleteIcons, getIconList, Icon, updateIcon} from "../../api/iconApi.ts";
+import {addIcon, deleteIcons, getIconList, Icon, updateIcon} from "@/api/iconApi.ts";
 import {useEffect, useState} from "react";
 import {DeleteOutlined, LoadingOutlined, PlusOutlined, SearchOutlined} from "@ant-design/icons";
 import {UploadChangeParam, UploadFile} from "antd/es/upload/interface";

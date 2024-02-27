@@ -1,8 +1,9 @@
 import {Button, Col, Form, Input, InputNumber, Modal, Radio, Row, Select, Space} from 'antd';
-import {getDataType, propertyAdd, PropertyType, propertyUpdate, Unit, unitList} from "../../api/propertyApi.ts";
+import {getDataType, propertyAdd, propertyUpdate, unitList} from "@/api/propertyApi.ts";
 import React, {useEffect, useState} from "react";
 import {MinusCircleOutlined, PlusOutlined} from "@ant-design/icons";
-import {getIconList, Icon} from "../../api/iconApi.ts";
+import {getIconList, Icon} from "@/api/iconApi.ts";
+import {PropertyType, Unit} from "@/types/api.ts";
 
 interface PropertyEditeProps {
     visible: boolean;

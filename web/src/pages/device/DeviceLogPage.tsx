@@ -1,5 +1,5 @@
 import {useEffect, useRef, useState} from "react";
-import {device_shadows, DeviceShadow, listDeviceLog} from "../../api/deviceApi.ts";
+import {device_shadows, DeviceShadow, listDeviceLog} from "@/api/deviceApi.ts";
 import {Avatar, Card, Col, Row, Space} from "antd";
 import * as echarts from 'echarts';
 
@@ -15,7 +15,7 @@ function DeviceLogPage(params: Params) {
     useEffect(() => {
         device_shadows(params.device_id!).then((res) => setShadows(res));
     }, [params]);
-    const echartsRef = useRef();
+    const echartsRef = useRef<HTMLDivElement>(null);
 
     async function showDetail(shadow: DeviceShadow) {
         const date = new Date();
