@@ -26,11 +26,9 @@ function DeviceLogPage(params: Params) {
             timestamp_start: previousMonth,
             timestamp_end: date,
         });
-        console.log(deviceLogs)
-
+        const isNumber = shadow.data_type == 1 || shadow.data_type == 7;
         const chartNumber = () => {
             const myChart = echarts.init(echartsRef.current)
-            const isNumber = shadow.data_type == 1 || shadow.data_type == 7;
             myChart.setOption({
                 title: {
                     text: shadow.property_name

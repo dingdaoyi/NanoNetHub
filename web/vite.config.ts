@@ -12,6 +12,14 @@ export default defineConfig({
             }
         }
     },
+    css: {
+        modules: {
+            localsConvention: 'camelCase',
+            scopeBehaviour: 'local',
+            generateScopedName: '[name]_[local]_[hash:5]',
+            globalModulePaths: [],
+        },
+    },
     resolve: {
         alias: {
             "@": resolve(__dirname, "./src"),

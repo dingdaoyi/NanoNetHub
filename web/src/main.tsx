@@ -5,6 +5,7 @@ import {HashRouter as Router, Route, Routes} from "react-router-dom";
 import {ConfigProvider} from "antd";
 import zhCN from "antd/locale/zh_CN"
 import Login from "./pages/login/Login.tsx";
+import "tailwindcss/tailwind.css"
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <Router>

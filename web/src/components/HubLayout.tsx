@@ -11,18 +11,10 @@ import {
 import {Header} from "antd/es/layout/layout";
 
 import {useNavigate} from "react-router-dom";
-import "./layout.less"
+import "./layout.scss"
 
 function HubLayout(params: { children: ReactNode }) {
     const [collapsed, setCollapsed] = useState(false);
-    // const [user, setUser] = useState<string>();
-
-    // useEffect(() => {
-    //     const initUser = getToken();
-    //     if (initUser) {
-    //         setUser(initUser);
-    //     }
-    // }, []);
     const navigate = useNavigate()
     const {
         token: {colorBgContainer},
