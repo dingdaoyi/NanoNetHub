@@ -1,7 +1,8 @@
 import {useEffect, useRef, useState} from "react";
-import {device_shadows, DeviceShadow, listDeviceLog} from "@/api/deviceApi.ts";
-import {Avatar, Card, Col, Row, Space} from "antd";
+import {device_shadows, DeviceLog, DeviceShadow, listDeviceLog} from "@/api/deviceApi.ts";
+import {Avatar, Card, Col, Row, Space, Table} from "antd";
 import * as echarts from 'echarts';
+import {ColumnsType} from "antd/es/table";
 
 const {Meta} = Card;
 
@@ -12,10 +13,26 @@ interface Params {
 
 function DeviceLogPage(params: Params) {
     const [shadows, setShadows] = useState<DeviceShadow[]>()
+    const [deviceLog, setDeviceLog] = useState<DeviceLog[]>()
     useEffect(() => {
         device_shadows(params.device_id!).then((res) => setShadows(res));
-    }, [params]);
-    const echartsRef = useRef<HTMLDivElement>(null);
+    }, [params.device_id]);
+    const dataRef = useRef<HTMLDivElement>(null);
+    const [showForm, setShowForm] = useState<boolean>(false); // 控制表单组件的显示状态
+
+
+    const logColumns: ColumnsType<DeviceLog> = [
+        {
+            title: '时间',
+            dataIndex: 'create_time',
+            key: 'create_time',
+        },
+        {
+            title: '采集值',
+            dataIndex: 'value',
+            key: 'value',
+        },
+    ];
 
     async function showDetail(shadow: DeviceShadow) {
         const date = new Date();
@@ -28,7 +45,10 @@ function DeviceLogPage(params: Params) {
         });
         const isNumber = shadow.data_type == 1 || shadow.data_type == 7;
         const chartNumber = () => {
-            const myChart = echarts.init(echartsRef.current)
+            if (dataRef.current == null) {
+                return
+            }
+            const myChart = echarts.init(dataRef.current);
             myChart.setOption({
                 title: {
                     text: shadow.property_name
@@ -47,14 +67,23 @@ function DeviceLogPage(params: Params) {
                 series: [
                     {
                         name: '时间',
-                        type: isNumber ? 'line' : 'bar',
+                        type: 'line',
                         smooth: true,
                         data: deviceLogs.map((log) => log.value)
                     }
                 ]
             })
         }
-        chartNumber()
+        if (isNumber) {
+            setShowForm(false)
+            setDeviceLog([])
+            setTimeout(() => {
+                chartNumber(); // 添加延迟以确保 DOM 元素已经被正确渲染
+            }, 0);
+        } else {
+            setDeviceLog(deviceLogs)
+            setShowForm(true)
+        }
     }
 
     return <>
@@ -83,8 +112,15 @@ function DeviceLogPage(params: Params) {
                     </Col>
                 })}
                 <Col span={24}>
-                    <div ref={echartsRef} style={{width: '100%', height: '400px'}}/>
+                    {showForm ? <Table columns={logColumns}
+                                       dataSource={deviceLog}
+                                       rowKey="create_time"
+                                       pagination={false}
+                    /> : <div ref={dataRef} style={{width: '100%', height: '400px'}}>
+                    </div>
+                    }
                 </Col>
+
             </Row>
         }
     </>;
