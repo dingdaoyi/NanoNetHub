@@ -40,6 +40,13 @@ interface Icon {
     default_icon?: boolean,
 }
 
+interface UserType {
+    id?: number,
+    name: string,
+    username: string,
+    email?: string,
+}
+
 interface ProductType {
     id?: number,
     create_time?: string,
@@ -134,5 +141,6 @@ export type {
     PropertyType,
     PropertyRef,
     Service,
-    LoginType
+    LoginType,
+    UserType
 }

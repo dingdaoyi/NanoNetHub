@@ -3,6 +3,7 @@ pub mod error;
 pub mod common;
 pub mod device;
 pub mod icon;
+pub mod user;
 
 /// 公共导出
 pub use self::error::ServerError;

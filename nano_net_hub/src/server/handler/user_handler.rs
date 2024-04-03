@@ -1,22 +1,27 @@
 use std::sync::OnceLock;
 use async_trait::async_trait;
 use axum::{Json, Router};
-use axum::extract::FromRequestParts;
+use axum::extract::{FromRequestParts, Path, Query};
 use axum::http::request::Parts;
-use axum::routing::post;
+use axum::routing::{delete, get, post};
 use chrono::{Duration, Utc};
 use headers::authorization::{Bearer, Credentials};
 use headers::HeaderValue;
 use jsonwebtoken::{decode, DecodingKey, encode, EncodingKey, Validation};
 use serde::{Deserialize, Serialize};
 use crate::config::AuthConfig;
+use crate::config::database::get_conn;
 use crate::models::{R, ServerError};
 use crate::models::common::user::LoginQuery;
 use crate::models::error::AuthError;
+use crate::models::icon::{CreateIcon, Icon};
+use crate::models::user::{CreateUser, User, UserQuery};
 use crate::server::handler::base::Controller;
 
 
 static AUTH_CONFIG: OnceLock<AuthConfig> = OnceLock::new();
+
+static DEFAULT_PASSWORD: &str = "123456";
 
 pub fn set_auth_config(auth: AuthConfig) {
     AUTH_CONFIG
@@ -34,13 +39,56 @@ pub struct UserHandler;
 impl Controller for UserHandler {
     fn router(&self) -> Router {
         Router::new()
+            .route("/user",get(Self::list)
+                .post(Self::save_user))
+            .route("/user/:id",delete(Self::delete_user))
             .route("/login", post(Self::login))
     }
 }
 
 impl UserHandler {
     // 创建
+    async fn save_user(Json(user): Json<CreateUser>) -> Result<Json<R<String>>, ServerError> {
+        let res = sqlx::query(
+            "INSERT INTO tb_user (username,name,password,email) VALUES (?,?,?,?)")
+            .bind(user.username)
+            .bind(user.name)
+            .bind(DEFAULT_PASSWORD)
+            .bind(user.email)
+            .execute(&get_conn()).await?;
+        if res.rows_affected() > 0 {
+            return Ok(Json(R::success()));
+        }
+        Err(ServerError::Message("添加失败".into()))
+    }
 
+    async fn delete_user(Path(id): Path<i32>) -> Result<Json<R<String>>, ServerError> {
+        let res = sqlx::query(
+            "delete from tb_user where id =?")
+            .bind(id)
+            .execute(&get_conn()).await?;
+        if res.rows_affected() > 0 {
+            return Ok(Json(R::success()));
+        }
+        Err(ServerError::Message("删除失败".into()))
+    }
+    async fn list(Query(UserQuery { username}): Query<UserQuery>) -> Result<Json<R<Vec<User>>>, ServerError> {
+        let query = "select * from tb_user";
+        let res = match username {
+            None => {
+                sqlx::query_as::<_, User>(query)
+                    .fetch_all(&get_conn())
+                    .await?
+            }
+            Some(name) => {
+                sqlx::query_as::<_, User>(&format!("{} where username like '%' || ? || '%'", query))
+                    .bind(name)
+                    .fetch_all(&get_conn())
+                    .await?
+            }
+        };
+        Ok(Json(R::success_with_data(res)))
+    }
     // 用户登录
     pub async fn login(Json(payload): Json<LoginQuery>) -> Result<Json<R<String>>, ServerError> {
         if payload.username.is_empty() || payload.password.is_empty() {

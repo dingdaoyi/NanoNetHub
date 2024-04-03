@@ -6,6 +6,7 @@ import ProductTsl from "./pages/tsl/ProductTsl.tsx";
 import DeviceInfo from "./pages/device/DeviceInfo.tsx";
 import DeviceDetails from "./pages/device/DeviceDetails.tsx";
 import IconPage from "./pages/icon/IconPage.tsx";
+import UserPage from "@/pages/user";
 
 function App() {
 
@@ -17,6 +18,7 @@ function App() {
                 <Route path={'tsl/:productId'} Component={ProductTsl}/>
                 <Route path={'device'} Component={DeviceInfo}/>
                 <Route path={'icon'} Component={IconPage}/>
+                <Route path={'user'} Component={UserPage}/>
                 <Route path={'device/details/:deviceId'} Component={DeviceDetails}/>
             </Routes>
         </HubLayout>
